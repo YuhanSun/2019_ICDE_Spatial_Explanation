@@ -1,0 +1,12 @@
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.out
+*.ps
+*.pdf
+*.log
+*.xcp
+*.png
+*.svg
+*.synctex.gz
