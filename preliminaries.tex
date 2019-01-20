@@ -1,9 +1,14 @@
-\section{System Ovreview}
+\section{System Overview}
 %\section{Star Schema}
 %{\bf Star Schema.} 
 %{\bf Star schema.} 
 
-Figure~\ref{fig:framework} shows the system diagram for our solution which uses hierarchical intervention. We take inputs in the form for aggregate queries. An arithmetic expression encapsulates the relationships between these queries. On the other hand, we have a spatial dataset. We use clustering/partitioning to create a hierarchy out of our spatial data. Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used to in a ranking system based on an explanation index. The explanation index measures the candidate explanations as a linear relationship between aggravation and intervention. How much each explanation approach is weighted in the explanation index is under the control of the data analyst. 
+Figure~\ref{fig:framework} shows the system diagram for our solution which uses hierarchical intervention. 
+The back-end of the system is the spatial data and a spatial database system. 
+Users may discover observations by searching the data. Their observations can be generated from data histograms and aggregated queries.
+%We take inputs in the form for aggregate queries. An arithmetic expression encapsulates the relationships between these queries. 
+The partitioner create a hierarchy partitions on top of spatial data. Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used to in a ranking system based on an explanation index. The explanation index evaluator measures the quality of candidate explanations and outputs the top-k explanations. 
+%How much each explanation approach is weighted in the explanation index is under the control of the data analyst. 
 %Finally, the top results are used for visualization. We have created a web-based GUI to display these kinds of explanations.
 
 \begin{figure}[t]
