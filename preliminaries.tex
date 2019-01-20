@@ -79,13 +79,13 @@ This type of schema where there is a central table consisting of facts while the
 %   \label{fig:observation_example}
 % \end{figure}
 
-{\bf Numeric Query.} A numeric query is an expression of the form:
+{\bf Numeric Query.} A numeric query $Q$ is an expression of the form as follows:
 $$Q = E(q_1, q_2, .., q_m)$$
-Here $q_i$ is any SQL query which contains an aggregate function. The aggregate function can be SUM, COUNT, and AVERAGE. So each $q_i$ will return a single numeric value. $E$ represents a numeric expression based on the result of $q_1$, $q_2$, .., $q_m$. The operator in $E$ can be any numeric operator, such as $+$, $-$, $*$, $/$, $log$, etc.
+Here $q_i$ is any SQL query which contains an aggregate function. The aggregate function can be SUM, COUNT, or AVERAGE. So each $q_i$ will return a single numeric value. $E$ represents a numeric expression based on the result of $q_1$, $q_2$, .., $q_m$. The operator in $E$ can be any numeric operator, such as $+$, $-$, $*$, $/$, $log$, etc.
 
-{\bf {\Fact}.} A {\fact} is a pair $(Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is direction indicating whether the user thinks $Q$ is higher or lower than the expected value.
+{\bf {\Fact}.} A {\fact} is a pair $(Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is direction indicating whether the user thinks the value of $Q$ is higher or lower than expected.
 
-{\bf Example.} In Figure \ref{fig:spatial_explanation_example}, there a {\fact} that the number of taxi trips in NYC on January 23, 2016 dropped drastically. Such {\fact} can be represented by two queries, $q_1$ and $q_2$ as follows:
+{\bf Example.} In Figure \ref{fig:yellowstats}, there exists a {\fact} that the number of taxi trips in NYC on January 23, 2016 dropped drastically. Such a {\fact} can be represented by two queries, $q_1$ and $q_2$ as follows:
 
 \renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
 \begin{lstlisting}[language=SQL, caption=Aggregate Query for the number of taxi trips on January 22, label=qry:aggregateexample1]
@@ -129,9 +129,9 @@ When a table is analyzed, users may find an interesting {\fact} from the data ta
 
 %\section{Explanations}
 {\bf {\Explanation}.} We represent an {\explanation} as a predicate $\phi$. 
-A predicate $\phi$ is a conditional statement which results in a boolean value. An {\explanation} indicates a set of tuples in the data table which satisfy the predicate. For non-spatial {\explanation}, $\phi$ has the format of $[A$ $op$ $c]$, where $A$ is an attribute in the data table, $op$ can be $=$, $<$, $\leq$, $>$, $\leq$ and $c$ is a numeric value. For example, we can have an non-spatial {\explanation} as follows:
+A predicate $\phi$ is a conditional statement which results in a boolean value. An {\explanation} indicates a subset of tuples in the data table which satisfy the predicate. For non-spatial {\explanation}, $\phi$ has the format of $[A$ $op$ $c]$, where $A$ is an attribute in the data table, $op$ can be $=$, $<$, $\leq$, $>$, $\leq$ and $c$ is a numeric value. For example, we can have an non-spatial {\explanation} as follows:
 $$\phi: PaymentType = 1$$
-If we use such {\explanation} to explain the {\fact} mentioned previously, it means we think that the drop on 22 January, 2016 is caused by the trips which are paid by Type 1 (but actually this explanation does not make sense).
+Such a {\explanation} indicates all the data tuples that satisfy this predicate. If such an {\explanation} is used to explain the {\fact} mentioned previously, it means that we think that the drop on 22 January, 2016 is caused by the trips which are paid by Type 1 (but actually this explanation does not make sense).
 
 %We go into more details for the formal definition of different kinds of explanations in Section~\ref{sec:taxonomy}. 
 %If we consider Queries~\ref{qry:aggregateexample1} and \ref{qry:aggregateexample2} as an example. The explanation would be in the form of a predicate:
@@ -152,9 +152,12 @@ If we use such {\explanation} to explain the {\fact} mentioned previously, it me
 
 {\bf {Explanation via Intervention.}} 
 %\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}  
-The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our aggregate {\fact} query. Denote $\phi$ as one candidate {\explanation}. Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. Then $D - \Delta_\phi$ represents the remaining part after removing $\Delta_\phi$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
+The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our aggregate {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
+%Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. 
+Let $D_{\phi}$ be a subset of $D$ that satisfy $\phi$. 
+Then $D - D_{\phi}$ represents the remaining part after removing $D_{\phi}$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
 \begin{equation}
-\delta_{int}:=
+\delta_{int(Q, dir)}(\phi):=
 \begin{cases}
 -Q(D-D_{\phi}), & \text{if}\ direction=high \\
 Q(D-D_{\phi}), & \text{otherwise}
