@@ -151,8 +151,9 @@ Such a {\explanation} indicates all the data tuples that satisfy this predicate.
 
 
 {\bf {Explanation via Intervention.}} 
-%\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}  
-The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our aggregate {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
+%\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
+\my{aggravation suddenly appear in this paragraph. Do we still mention aggravation.}. 
+The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our \my{aggregate} {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
 %Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. 
 Let $D_{\phi}$ be a subset of $D$ that satisfy $\phi$. 
 Then $D - D_{\phi}$ represents the remaining part after removing $D_{\phi}$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
@@ -165,8 +166,10 @@ Q(D-D_{\phi}), & \text{otherwise}
 \end{equation}
 
 The degree of candidate explanation by intervention must be higher the closer we are to the direction of the observation, therefore, we use the negative value when the direction is high. If the influence of the candidate explanation is high, it will result in a low observation value once the candidate explanation is removed from the dataset.
-Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by \my{bucketing} the attributes. We can extend intervention for spatial observations and explanations the same way we did for aggravation. The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. \my{Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.}
+\my{Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. 
+Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by \my{bucketing} the attributes.} We can extend intervention for spatial observations and explanations the same way we did for aggravation. \my{The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.}
 
+For instance, given the example {\fact} $(q_1/q_2, low)$ and the {\explanation} $\phi: PaymentType = 1$, the intervention $\delta_{int(Q, dir)}(\phi)$ can be computed by evaluating $q_1/q_2$ on the subset data $D-D_\phi$. If the {\explanation} is reasonable, the value of intervention should be far larger than the $Q$ on the original dataset $D$. But actually the intervention value of this {\explanation} does not change much from $D$. So it again proves that such {\explanation} does not make sense.
 
 {\bf Finding Spatial Explanations.}
 %{\bf Spatial {\Explanation}.} 
