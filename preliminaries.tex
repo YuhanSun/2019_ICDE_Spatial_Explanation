@@ -173,8 +173,10 @@ For instance, given the example {\fact} $(q_1/q_2, low)$ and the {\explanation} 
 
 {\bf Finding Spatial Explanations.}
 %{\bf Spatial {\Explanation}.} 
-A spatial {\explanation} is different that general {\explanation} in that it is represented by a spatial predicate. A spatial {\explanation} actually indicates a set of data tuples that can satisfy the spatial predicate. We denote a spatial {\explanation} as $\phi_S$.
-Spatial explanations take the spatial attributes of the data into consideration. In contrast to non spatial explanations, the candidate spatial explanations consists of polygons. Since we base our proposed approach on the assumption that important tuples are spatially co-located, points which fall inside these polygons form a candidate explanation. 
+A spatial {\explanation} is an {\explanation} that has a spatial predicate. A spatial {\explanation} actually indicates a set of data tuples that can satisfy the spatial predicate. We denote a spatial {\explanation} as $\phi_S$.
+Spatial explanations take the spatial attributes of the data into consideration. In contrast to non-spatial explanations, the candidate spatial explanations consists of polygons. 
+%Since we base our proposed approach on the assumption that important tuples are spatially co-located, points which fall inside these polygons form a candidate explanation. 
+The intuition behind the spatial {\explanation} is that data tuples in the reasonable {\explanation} are spatially co-located for spatial data.
 %Let $S$ be the spatial attributes of $D$ and $P$ be the set of all possible polygons that can be formed from $S$. Let $G$ be a function such that$G(s,t)$ is true when $(s,t) \in P$ and false otherwise, where $s$,$t$ are the dimensions of a point in the Cartesian plane. Our candidate explanation can be defined as,
 %$$\phi  \models \vee_{l,k} G(l,k)$$
 %where $k,l \in A_D$
@@ -188,14 +190,16 @@ Spatial explanations take the spatial attributes of the data into consideration.
 %\label{fig:spatial_explanation_example}
 %\end{figure}
 
-The polygons painted purple show polygons in the candidate {\explanation} where the tip percentage is high, while polygons painted blue show candidate explanations where the tip percentage is low. It should be noted that $P$ has a high number of permutations. It is up to the approach to decide which polygons to include in the candidate explanation. For instance, hierarchical intervention may choose polygons in a spatial proximity while aggravation may choose otherwise.
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{images/scatter}
-\caption{Heatmap for NYC trips for January 2016}
-\label{fig:square_unit_grid}
-\end{figure}
+Fig.\my{figure to be created and added here} shows the heatmap for the value of $Q = q_1 / q_2$. It shows that the high values are located closely which means the {\fact} that the decreasing of the number of trips are caused by the trips that happen in some specific regions. Spatial aspect plays an important role in the {\fact} {\explanation} question. So the problem comes to how to detect these regions in a convenient and efficient way. In the following section, we will discuss about our solution.
 
-\my{Another interesting consideration when we are talking about spatial explanations is the density of the data. Fig.~\ref{fig:square_unit_grid} shows the heatmap for tip percentage with respect to pickup coordinates. It is interesting to observe that the explanations provided in Fig.~\ref{fig:spatial_explanation_example} are all areas with low density of data. One of the reasons for this is because each approach takes some liberty with our definition of the taxonomy. Even though, we defined $P$ to contain all permutations of polygons, an approach may use limited polygons, such as neighborhoods or zones. The way the explanation is ranked also plays a large role.}
+%The polygons painted purple show polygons in the candidate {\explanation} where the tip percentage is high, while polygons painted blue show candidate explanations where the tip percentage is low. It should be noted that $P$ has a high number of permutations. It is up to the approach to decide which polygons to include in the candidate explanation. For instance, hierarchical intervention may choose polygons in a spatial proximity while aggravation may choose otherwise.
+%\begin{figure}[t]
+%\includegraphics[width=\columnwidth]{images/scatter}
+%\caption{Heatmap for NYC trips for January 2016}
+%\label{fig:square_unit_grid}
+%\end{figure}
+
+%\my{Another interesting consideration when we are talking about spatial explanations is the density of the data. Fig.~\ref{fig:square_unit_grid} shows the heatmap for tip percentage with respect to pickup coordinates. It is interesting to observe that the explanations provided in Fig.~\ref{fig:spatial_explanation_example} are all areas with low density of data. One of the reasons for this is because each approach takes some liberty with our definition of the taxonomy. Even though, we defined $P$ to contain all permutations of polygons, an approach may use limited polygons, such as neighborhoods or zones. The way the explanation is ranked also plays a large role.}
 
 
 
