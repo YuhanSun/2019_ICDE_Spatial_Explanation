@@ -7,9 +7,10 @@ Figure~\ref{fig:framework} shows the system diagram for our solution which uses 
 %Finally, the top results are used for visualization. We have created a web-based GUI to display these kinds of explanations.
 
 \begin{figure}[t]
-\includegraphics[width=\columnwidth]{images/framework}
-\caption{An outline for our system framework}
-\label{fig:framework}
+	\centering
+		\includegraphics[width=0.4\textwidth]{images/architecture.eps}
+		\caption{An outline for our system framework}
+	\label{fig:framework}
 \end{figure}
 
 The proposed system has the underlying assumption that the data that will be used to generate explanations is the Fact Table for a Star schema\cite{giovinazzo2000object,adamson2010star}. To understand the Fact Table, it is important to understand the structure of the Star Schema. A traditional relational database system contains a set of tables related by primary and foreign keys. For instance, we can use our running example of the NYC Taxi Trips dataset to illustrate a Star Schema. The trips and payment type can be represented in separate tables. One trip can have a single payment type while a payment type can be used in multiple trips. This is an example of a one-to-many relationship.
