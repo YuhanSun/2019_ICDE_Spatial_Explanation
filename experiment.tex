@@ -1,4 +1,4 @@
-\section{EXPERIMENTS/EVALUATION}
+\section{EXPERIMENTS}
 \label{sec:evaluation}
 %Why we need evaluation\label{sec:relevance}
 The main contribution of this paper is to introduce a new approach for explanations(Hierarchical Intervention). We evaluate this new approach in a number of different ways. We perform qualitative evaluation and speed/scalability evaluation.
@@ -26,12 +26,15 @@ This dataset includes the pick-up and drop-off location of the taxi trips and th
 
 %\textbf{Experimental Setup}. The speed of each approach is simply the time taken to calculate the explanations. Since all the approaches are implemented on top of distributed systems, the time varies depending on the number of nodes used. We experimented with calculating explanations for 1,3, and 5 months in a distributed environment. For the cluster, we used Google Compute Engine nodes(1 vCPU, 3.5GB RAM, 4 nodes). All the nodes in our cluster had the same specifications. The Aggravation, Intervention and Hierarchical Intervention were tested on Apache Spark running on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN.
 
+\subsection{Spatial partitioning methods}
 \begin{figure}[h]
 \includegraphics[width=\columnwidth]{images/hieint_passenger_count}
 \caption{Comparison of Influence and Intensity against level of hierarchy with average passenger count as observation}
 \label{fig:hieint_passenger_count}
 \end{figure}
-We found that R-Tree and R* Tree partitioning is usually more stable than K Means or Greedy Clustering. The stability of the clustering technique is referring to its monotonicity of the explanation as a function of the number of clusters. Fig.~\ref{fig:hieint_passenger_count} shows the influence against the number of clusters where the observation is the average passenger count. The influence and intensity are closer to a sinusoidal curve than a exponential or logarithmic curve. Fig.~\ref{fig:clustering_comparison} shows another observation and a plot of the influence of R-Tree and R*-Tree as well. The influence as a function of the number of clusters is a lot more monotonic here. Furthermore, R* Tree has a higher influence on average compared to other approaches making it a lot more suitable for explanations.
+Spatial explanation requires to create spatial predicate which partition the whole dataset into different spatial partitions. In our evaluation, we consider three spatial partitioning methods, R-Tree, R* Tree and K-means. 
+Fig. \ref{fig:clustering_comparison} shows the influence of different partitioning methods with different number of clusters. 
+It shows that R-Tree and R* Tree partitioning are usually more stable than K- Means. The stability of the clustering technique is referring to its monotonicity of the explanation as a function of the number of clusters. Fig.~\ref{fig:hieint_passenger_count} shows the influence against the number of hierarchy levels where the observation is the average passenger count. The influence and intensity are closer to a sinusoidal curve than a exponential or logarithmic curve. Fig.~\ref{fig:clustering_comparison} shows another observation and a plot of the influence of R-Tree and R*-Tree as well. The influence as a function of the number of clusters is a lot more monotonic here. Furthermore, R* Tree has a higher influence on average compared to other approaches making it a lot more suitable for explanations.
 %Reasons for selecting evaluation criteria
 The qualitative evaluation that we define is based on K-Folds cross validation. The reason for selecting these evaluations is to measure how the top explanations provided by each approach fair as stand alone parts of data as well as their effects on the entire dataset as a whole. Other than qualitative analysis we look at the speed and scalability of each approach for performance evaluation.
 
@@ -112,13 +115,24 @@ Since it is very difficult to find datasets with the ground truth we used synthe
 % \label{fig:precisionrecall}
 % \end{figure}
 
-Let $E$ be the area represented by our polygons. Let $O$ be the area represented by the Outbreak points. Then,
-$$Precision = \frac{E \cap O}{E} = 0.31$$
+Precision can be evaluated by the following equation:
+$$Precision = \frac{E \cap O}{E}$$
+where $E$ is the area represented by our polygons and $O$ is the area represented by the Outbreak points.
 
+% don't understand the definition (why it is defined as this?)
 For calculating recall, we can use the actual outbreak points since it doesn't require false positives.
-$$Recall = \frac{true\_positives}{false\_negatives} = 0.74$$
+$$Recall = \frac{true\_positives}{false\_negatives}$$
 
-
+\begin{table}[]
+    \centering
+    \caption{Precision and Recall}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Precision & 0.31 & 0.01 & 0.0003\\ \hline
+        Recall &  0.74 & 0.04 & 1\\ \hline
+    \end{tabular}
+    \label{tab:precision_and_recall}
+\end{table}
 
 
 \subsection{Comparison}
