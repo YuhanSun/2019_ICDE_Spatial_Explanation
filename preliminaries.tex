@@ -204,7 +204,9 @@ where $D_{\neg \phi}$ represents remaining part of the dataset after removal of 
 	\item $\phi_2$: PayType = 2;
 	\item $\phi_3$: PayType = 3.
 \end{itemize}
-$Q(D) = 1/7$. For each {\explanation}, its intensity and influence are listed in Table \ref{table:intensity_influence_example}. We can notice that the best {\explanation} considering intensity is $\phi_3$ it is because $\phi_3$ has the highest reduction factor for itself. Regarding influence, the best {\explanation} is $\phi_2$. The reason is although its reduction factor is less than $\phi_3$, it has larger volume and its influence is larger when its tuples are removed from the dataset. 
+For the whole dataset, $Q(D) = 1/7$. For each {\explanation}, its intensity and influence are listed in Table \ref{table:intensity_influence_example}. We can notice that the best {\explanation} considering intensity is $\phi_3$ it is because $\phi_3$ has the highest reduction factor for itself. Regarding influence, the best {\explanation} is $\phi_2$. The reason is although its reduction factor is less than $\phi_3$, it has larger volume and its influence is larger when its tuples are removed from the dataset.
+
+From such an example, we can also find out the drawback of the two approaches. Intensity focuses on the {\explanation} itself without considering the size of the {\explanation}. As a result, a selective {\explanation} can have high intensity but have low impact on the {\fact} because of its small size. Regarding influence, since it focuses the remaining data, it overlooks the $Q$ value for the {\explanation} itself. Influence also tends to measure larger-sized {\explanation} to be more important. 
 
 {\bf {Explanation via Intervention.}} 
 %\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
