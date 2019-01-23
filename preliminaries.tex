@@ -85,9 +85,9 @@ This type of schema where there is a central table consisting of facts while the
 
 {\bf Numeric Query.} A numeric query $Q$ is an expression of the form as follows:
 $$Q = E(q_1, q_2, .., q_m)$$
-Here $q_i$ is any SQL query which contains an aggregate function. The aggregate function can be SUM, COUNT, or AVERAGE. So each $q_i$ will return a single numeric value. $E$ represents a numeric expression based on the result of $q_1$, $q_2$, .., $q_m$. The operator in $E$ can be any numeric operator, such as $+$, $-$, $*$, $/$, $log$, etc.
+Here $q_i$ is any SQL query which contains an aggregate function. The aggregate function can be SUM, COUNT, or AVERAGE. So each query $q_i$ will return a single numeric value. $E$ represents a numeric expression based on the result of $q_1$, $q_2$, .., $q_m$. The operator in $E$ can be any numeric operator, such as $+$, $-$, $*$, $/$, $log$, etc.
 
-{\bf {\Fact}.} A {\fact} is a pair $(Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is direction indicating whether the user thinks the value of $Q$ is higher or lower than expected.
+{\bf {\Fact}.} A {\fact} is a pair $(Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is a direction indicating whether the user thinks the value of $Q$ is higher or lower than expected.
 
 {\bf Example.} In Figure \ref{fig:yellowstats}, there exists a {\fact} that the number of taxi trips in NYC on January 23, 2016 dropped drastically. Such a {\fact} can be represented by two queries, $q_1$ and $q_2$ as follows:
 
