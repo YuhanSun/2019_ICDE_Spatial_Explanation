@@ -87,23 +87,27 @@ This type of schema where there is a central table consisting of facts while the
 $$Q = E(q_1, q_2, .., q_m)$$
 Here $q_i$ is any SQL query which contains an aggregate function. The aggregate function can be SUM, COUNT, or AVERAGE. So each query $q_i$ will return a single numeric value. $E$ represents a numeric expression based on the result of $q_1$, $q_2$, .., $q_m$. The operator in $E$ can be any numeric operator, such as $+$, $-$, $*$, $/$, $log$, etc.
 
-{\bf {\Fact}.} A {\fact} is a pair $(Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is a direction indicating whether the user thinks the value of $Q$ is higher or lower than expected.
+{\bf {\Fact}.} A {\fact} is a pair $F = (Q, dir)$, where (1) $Q$ is a numeric query, (2) $dir \in \{high, low\}$ is a direction indicating whether the user thinks the value of $Q$ is higher or lower than expected.
 
 {\bf Example.} In Figure \ref{fig:yellowstats}, there exists a {\fact} that the number of taxi trips in NYC on January 23, 2016 dropped drastically. Such a {\fact} can be represented by two queries, $q_1$ and $q_2$ as follows:
+\begin{itemize}
+	\item Aggregate Query for the number of trips on January 22.
+	\item Aggregate Query for the number of trips on January 23.
+\end{itemize}
+%\renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
+%\begin{lstlisting}[language=SQL, caption=Aggregate Query for the number of taxi trips on January 22, label=qry:aggregateexample1]
+%SELECT COUNT(*) FROM
+%FROM nyc_data
+%WHERE date = 'January 22, 2016'
+%\end{lstlisting}
+%\renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
+%\begin{lstlisting}[language=SQL, caption=Aggregate Query for the number of taxi trips on January 23, label=qry:aggregateexample2]
+%SELECT COUNT(*) FROM
+%FROM nyc_data
+%WHERE date = 'January 23, 2016'
+%\end{lstlisting}
 
-\renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
-\begin{lstlisting}[language=SQL, caption=Aggregate Query for the number of taxi trips on January 22, label=qry:aggregateexample1]
-SELECT COUNT(*) FROM
-FROM nyc_data
-WHERE date = 'January 22, 2016'
-\end{lstlisting}
-\renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
-\begin{lstlisting}[language=SQL, caption=Aggregate Query for the number of taxi trips on January 23, label=qry:aggregateexample2]
-SELECT COUNT(*) FROM
-FROM nyc_data
-WHERE date = 'January 23, 2016'
-\end{lstlisting}
-The difference in the number of taxi trips between the two dates can be represented by a numeric query $Q = \frac{q_1}{q_2}$. The number of taxi trips drops drastically, so it means the value of $Q$ is lower than the expected value. Then the {\fact} has the format $(\frac{q_1}{q_2}, low)$.
+The difference in the number of taxi trips between the two dates can be represented by a numeric query $Q = {q_1} / {q_2}$. The number of taxi trips drops drastically, so it means the value of $Q$ is lower than the expected value. Then the {\fact} $F = ({q_1} / {q_2}, low)$.
 
 When a table is analyzed, users may find an interesting {\fact} from the data table. This {\fact} is issued to the system with the defined format as the input. Then the system will try to find out the {\explanation} for the {\fact}.
 
