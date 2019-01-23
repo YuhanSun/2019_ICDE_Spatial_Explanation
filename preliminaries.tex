@@ -5,9 +5,11 @@
 
 Figure~\ref{fig:framework} shows the system diagram for our solution which uses hierarchical intervention. 
 The back-end of the system is the spatial data and a spatial database system. 
-Users may discover observations by searching the data. Their observations can be generated from data histograms and aggregated queries.
+Users may discover {\fact} by searching the data in the back-end. Their observations can be generated from data histograms and aggregated queries. For instance, the user observe the drastic drop in the number of taxi trips on January 23, 2016 from the histogram. 
 %We take inputs in the form for aggregate queries. An arithmetic expression encapsulates the relationships between these queries. 
-The partitioner create a hierarchy partitions on top of spatial data. Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used to in a ranking system based on an explanation index. The explanation index evaluator measures the quality of candidate explanations and outputs the top-k explanations. 
+The partitioner creates a hierarchy of partitions on the spatial data. These partitions are the candidate spatial explanations for the output explanation. %Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used to in a ranking system based on an explanation index. The explanation index evaluator measures the quality of candidate explanations and outputs the top-k explanations. 
+The {\evaluator} takes the candidate explanations and the {\fact} detected by the user and compute the aggregation and intervention for each explanation. 
+The top-K explanations will be output as the final result.
 %How much each explanation approach is weighted in the explanation index is under the control of the data analyst. 
 %Finally, the top results are used for visualization. We have created a web-based GUI to display these kinds of explanations.
 
