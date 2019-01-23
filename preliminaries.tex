@@ -107,7 +107,7 @@ Here $q_i$ is any SQL query which contains an aggregate function. The aggregate 
 %WHERE date = 'January 23, 2016'
 %\end{lstlisting}
 
-The difference in the number of taxi trips between the two dates can be represented by a numeric query $Q = {q_1} / {q_2}$. The number of taxi trips drops drastically, so it means the value of $Q$ is lower than the expected value. Then the {\fact} $F = ({q_1} / {q_2}, low)$.
+The difference in the number of taxi trips between the two dates can be measured by a numeric query $Q = {q_1} / {q_2}$. The number of taxi trips drops drastically, so it means the value of $Q$ is lower than the expected value. Then the {\fact} $F = ({q_1} / {q_2}, low)$.
 
 When a table is analyzed, users may find an interesting {\fact} from the data table. This {\fact} is issued to the system with the defined format as the input. Then the system will try to find out the {\explanation} for the {\fact}.
 
@@ -139,7 +139,8 @@ When a table is analyzed, users may find an interesting {\fact} from the data ta
 {\bf {\Explanation}.} We represent an {\explanation} as a predicate $\phi$. 
 A predicate $\phi$ is a conditional statement which results in a boolean value. An {\explanation} indicates a subset of tuples in the data table which satisfy the predicate. For non-spatial {\explanation}, $\phi$ has the format of $[A$ $op$ $c]$, where $A$ is an attribute in the data table, $op$ can be $=$, $<$, $\leq$, $>$, $\leq$ and $c$ is a numeric value. For example, we can have an non-spatial {\explanation} as follows:
 $$\phi: PaymentType = 1$$
-Such a {\explanation} indicates all the data tuples that satisfy this predicate. If such an {\explanation} is used to explain the {\fact} mentioned previously, it means that we think that the drop on 22 January, 2016 is caused by the trips which are paid by Type 1 (but actually this explanation does not make sense).
+Such an {\explanation} indicates that all the data tuples that satisfy this predicate. If such an {\explanation} is used to explain the {\fact} mentioned previously, it means that we think that the drop on 22 January, 2016 is caused by the trips which are paid by Type 1.
+% (but actually this explanation does not make sense).
 
 %We go into more details for the formal definition of different kinds of explanations in Section~\ref{sec:taxonomy}. 
 %If we consider Queries~\ref{qry:aggregateexample1} and \ref{qry:aggregateexample2} as an example. The explanation would be in the form of a predicate:
@@ -157,6 +158,53 @@ Such a {\explanation} indicates all the data tuples that satisfy this predicate.
 
 %Note that $P$ is an open ended function. In the case of spatial explanations, $P$ can take the form of a spatial function like $ST\_CONTAINS$ in PostGIS i.e. whether a polygon contains a point. In the non spatial context, $P$ can represent functions like 'greater than', 'less than', etc.
 
+The problem comes into how to decide whether an {\explanation} is a good {\explanation} or not. So we need to define a metric to measure the goodness of a given {\explanation}. Basically, our metric is defined based on two elements, intensity and influence. 
+
+{\bf Intensity:} We define intensity as a metric which measures the {\fact} value of the explanation (the subset of dataset). Given a {\fact} $Q$ to be explained, the intensity of an {\explanation} $\phi$ can be as follows:
+$$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
+%Formal definition of relevance
+where $D$ is the dataset and $D_\phi$ is the subset of the data represented by the {\explanation} $\phi$. $dir$ is 1 if the direction is high and -1 otherwise. 
+The intuitive behind Intensity is as follows: an {\fact} $F$ indicates a value of $Q$ which is higher or lower than normal (direction). A good {\explanation} should has the highest deviation from the whole dataset then it can push the value of $Q$ to the same direction. 
+%The relevance metric borrows a lot from our definition of aggravation. 
+%It might be convenient to think of a web search engine when we are looking at the intensity metric. When we use a search engine, we provide a search term as the query input. The search engine looks at all the pages in its database and returns the results in order of relevance. The top results in the search engine may not have a significant effect on the entire web if they were to be removed. However, the top result in the search engine has the highest relation to the data. For example, the top result for a search engine which uses tf-idf might be a page containing the highest frequency of the search term\cite{robertson2004understanding}.
+
+
+\textbf{Influence:}
+% What is influence
+%We define influence as a metric which measures the value of the explanation compared to the entire dataset. The influence metric borrows from our definition of intervention. The influence metric measures how much the observation would be affected if we remove the data related to our explanation(the \textit{influence} of our explanation on the observation). We can use the analogy of the search engine again here. One of the earliest algorithms used by Google to rank webpages used links to other pages\cite{brin1998anatomy}. The page which was linked the most on a variety of websites was ranked higher. If you remove a highly relevant page, many other pages might not exist. Influence uses the same principle.
+Influence measures how much the {\fact} would be affected if we remove the data represented by the {\explanation}. 
+%Formal definition of influence
+%Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define relevance as,
+It is defined as follows:
+$$influence = dir \cdot (Q (D) - Q(D_{\neg \phi})) $$
+where $D_{\neg \phi}$ represents remaining part of the dataset after removal of tuples in the {\explanation}. The intuitive behind influence is after removing the {\explanation} tuples, the remaining dataset should have the value of $Q$ towards the opposite direction as possible. Then it means the removal data has high impact on $Q$. 
+%The greater the value of influence, the more its impact on the observation.
+
+\begin{table}
+	\centering
+	\caption{text}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		PayType & \# on 22, Jan & \# on 23, Jan & Intensity & Influence\\ \hline
+		% -1 * ((4000 / 25000) - 1/7) --> intensity
+		% -1 * (1/7 - 1000 / 10000) --> influence
+		% -1 * (1/7 - 4100 / 27000)
+		% -1 * (1/7 - 4900 / 33000)
+		1 & 25000 & 4000 & -0.02& -0.04\\ \hline
+		2 & 8000 & 900  & 0.03& 0.009\\ \hline
+		3 & 2000 & 100  & 0.09& 0.006\\ \hline
+		Total	& 35000 & 5000  &- & - \\ \hline			
+	\end{tabular}
+	\label{table:intensity_influence_example}
+\end{table}
+
+{\bf Example.} Table \ref{table:intensity_influence_example} shows the number of taxi trips on Jan, 22nd and 23rd. The number of trips for each payment type is also listed in the table. Assume our candidate {\explanation} are:
+\begin{itemize}
+	\item $\phi_1$: PayType = 1;
+	\item $\phi_2$: PayType = 2;
+	\item $\phi_3$: PayType = 3.
+\end{itemize}
+$Q(D) = 1/7$. For each {\explanation}, its intensity and influence are listed in Table \ref{table:intensity_influence_example}. We can notice that the best {\explanation} considering intensity is $\phi_3$ it is because $\phi_3$ has the highest reduction factor for itself. Regarding influence, the best {\explanation} is $\phi_2$. The reason is although its reduction factor is less than $\phi_3$, it has larger volume and its influence is larger when its tuples are removed from the dataset. 
 
 {\bf {Explanation via Intervention.}} 
 %\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
