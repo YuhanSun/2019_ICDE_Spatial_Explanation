@@ -208,26 +208,30 @@ For the whole dataset, $Q(D) = 1/7$. For each {\explanation}, its intensity and 
 
 From such an example, we can also find out the drawback of the two approaches. Intensity focuses on the {\explanation} itself without considering the size of the {\explanation}. As a result, a selective {\explanation} can have high intensity but have low impact on the {\fact} because of its small size. Regarding influence, since it focuses the remaining data, it overlooks the $Q$ value for the {\explanation} itself. Influence also tends to measure larger-sized {\explanation} to be more important. 
 
-{\bf {Explanation via Intervention.}} 
-%\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
-\my{aggravation suddenly appear in this paragraph. Do we still mention aggravation.}. 
-The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our \my{aggregate} {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
-%Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. 
-Let $D_{\phi}$ be a subset of $D$ that satisfy $\phi$. 
-Then $D - D_{\phi}$ represents the remaining part after removing $D_{\phi}$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
-\begin{equation}
-\delta_{int(Q, dir)}(\phi):=
-\begin{cases}
--Q(D-D_{\phi}), & \text{if}\ direction=high \\
-Q(D-D_{\phi}), & \text{otherwise}
-\end{cases}
-\end{equation}
+Due to their drawbacks, we define a new metric, \textit{explanation index}, which balance out these two metrics according to the preferences of the user: 
+$$\epsilon = \alpha \times influence + (1-\alpha) \times intensity$$
+where $\alpha$ is the \textit{explanation coefficient}. It is a variable whose value is decided by the user.
 
-The degree of candidate explanation by intervention must be higher the closer we are to the direction of the observation, therefore, we use the negative value when the direction is high. If the influence of the candidate explanation is high, it will result in a low observation value once the candidate explanation is removed from the dataset.
-\my{Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. 
-Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by \my{bucketing} the attributes.} We can extend intervention for spatial observations and explanations the same way we did for aggravation. \my{The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.}
-
-For instance, given the example {\fact} $(q_1/q_2, low)$ and the {\explanation} $\phi: PaymentType = 1$, the intervention $\delta_{int(Q, dir)}(\phi)$ can be computed by evaluating $q_1/q_2$ on the subset data $D-D_\phi$. If the {\explanation} is reasonable, the value of intervention should be far larger than the $Q$ on the original dataset $D$. But actually the intervention value of this {\explanation} does not change much from $D$. So it again proves that such {\explanation} does not make sense.
+%{\bf {Explanation via Intervention.}} 
+%%\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
+%\my{aggravation suddenly appear in this paragraph. Do we still mention aggravation.}. 
+%The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our \my{aggregate} {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
+%%Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. 
+%Let $D_{\phi}$ be a subset of $D$ that satisfy $\phi$. 
+%Then $D - D_{\phi}$ represents the remaining part after removing $D_{\phi}$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
+%\begin{equation}
+%\delta_{int(Q, dir)}(\phi):=
+%\begin{cases}
+%-Q(D-D_{\phi}), & \text{if}\ direction=high \\
+%Q(D-D_{\phi}), & \text{otherwise}
+%\end{cases}
+%\end{equation}
+%
+%The degree of candidate explanation by intervention must be higher the closer we are to the direction of the observation, therefore, we use the negative value when the direction is high. If the influence of the candidate explanation is high, it will result in a low observation value once the candidate explanation is removed from the dataset.
+%\my{Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. 
+%Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by \my{bucketing} the attributes.} We can extend intervention for spatial observations and explanations the same way we did for aggravation. \my{The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.}
+%
+%For instance, given the example {\fact} $(q_1/q_2, low)$ and the {\explanation} $\phi: PaymentType = 1$, the intervention $\delta_{int(Q, dir)}(\phi)$ can be computed by evaluating $q_1/q_2$ on the subset data $D-D_\phi$. If the {\explanation} is reasonable, the value of intervention should be far larger than the $Q$ on the original dataset $D$. But actually the intervention value of this {\explanation} does not change much from $D$. So it again proves that such {\explanation} does not make sense.
 
 {\bf Finding Spatial Explanations.}
 %{\bf Spatial {\Explanation}.} 
@@ -248,7 +252,7 @@ The intuition behind the spatial {\explanation} is that data tuples in the reaso
 %\label{fig:spatial_explanation_example}
 %\end{figure}
 
-Fig.\my{figure to be created and added here} shows the heatmap for the value of $Q = q_1 / q_2$. It shows that the high values are located closely which means the {\fact} that the decreasing of the number of trips are caused by the trips that happen in some specific regions. Spatial aspect plays an important role in the {\fact} {\explanation} question. So the problem comes to how to detect these regions in a convenient and efficient way. In the following section, we will discuss about our solution.
+{\bf Example.} Fig.\my{figure to be created and added here} shows the heatmap for the value of $Q = q_1 / q_2$. It shows that the high values are located closely which means the {\fact} that the decreasing of the number of trips are caused by the trips that happen in some specific regions. Spatial aspect plays an important role in the {\fact} {\explanation} question. So the problem comes to how to detect these regions in a convenient and efficient way. In the following section, we will discuss about our solution.
 
 %The polygons painted purple show polygons in the candidate {\explanation} where the tip percentage is high, while polygons painted blue show candidate explanations where the tip percentage is low. It should be noted that $P$ has a high number of permutations. It is up to the approach to decide which polygons to include in the candidate explanation. For instance, hierarchical intervention may choose polygons in a spatial proximity while aggravation may choose otherwise.
 %\begin{figure}[t]
