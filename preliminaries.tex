@@ -235,10 +235,14 @@ where $\alpha$ is the \textit{explanation coefficient}. It is a variable whose v
 
 {\bf Finding Spatial Explanations.}
 %{\bf Spatial {\Explanation}.} 
-A spatial {\explanation} is an {\explanation} that has a spatial predicate. A spatial {\explanation} actually indicates a set of data tuples that can satisfy the spatial predicate. We denote a spatial {\explanation} as $\phi_S$.
-Spatial explanations take the spatial attributes of the data into consideration. In contrast to non-spatial explanations, the candidate spatial explanations consists of polygons. 
+For the previous example, values of both intensity and influence are quite small. 
+It means that the example {\explanation}s are not convincing enough to explain the {\fact}. 
+So we propose another type of {\explanation}, spatial {\explanation}. 
+A spatial {\explanation} is an {\explanation} whose predicate is a spatial range predicate. A spatial {\explanation} actually indicates a set of data tuples that satisfy the range predicate. We denote a spatial {\explanation} as $\phi_S$. 
+Spatial {\explanation}s take the spatial attributes of the data into consideration. In contrast to non-spatial explanations, the candidate spatial explanations consists of polygons. 
 %Since we base our proposed approach on the assumption that important tuples are spatially co-located, points which fall inside these polygons form a candidate explanation. 
-The intuition behind the spatial {\explanation} is that data tuples in the reasonable {\explanation} are spatially co-located for spatial data.
+The intuition behind the spatial {\explanation} is that a {\fact} can be caused by an incident. If an incident happens in a place, then it has an effect on a specific region. 
+As a result, data tuples in the reasonable {\explanation} should be spatially co-located. 
 %Let $S$ be the spatial attributes of $D$ and $P$ be the set of all possible polygons that can be formed from $S$. Let $G$ be a function such that$G(s,t)$ is true when $(s,t) \in P$ and false otherwise, where $s$,$t$ are the dimensions of a point in the Cartesian plane. Our candidate explanation can be defined as,
 %$$\phi  \models \vee_{l,k} G(l,k)$$
 %where $k,l \in A_D$
