@@ -1,13 +1,36 @@
+\section{System Overview}
+%\section{Star Schema}
+%{\bf Star Schema.} 
+%{\bf Star schema.} 
 
+Figure~\ref{fig:framework} shows the system diagram for our solution. 
+The back-end of the system is spatial data manged by a spatial database. 
+Users may discover {\fact}s by searching the data in the back-end. Their observations can be generated from data histograms and aggregated queries. For instance, the user might observe the drastic drop in the number of taxi trips on January 23, 2016 from the histogram in Figure \ref{fig:yellowstats}. 
+%We take inputs in the form for aggregate queries. An arithmetic expression encapsulates the relationships between these queries. 
+The partitioner creates a hierarchy of partitions on the spatial data. These partitions are the candidate spatial {\explanation}s. %Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used to in a ranking system based on an explanation index. The explanation index evaluator measures the quality of candidate explanations and outputs the top-k explanations. 
+The {\evaluator} takes the candidate explanations and the {\fact} detected by the user and compute the aggregation and intervention for each explanation. 
+The top-K explanations will be output as the final result.
+%How much each explanation approach is weighted in the explanation index is under the control of the data analyst. 
+%Finally, the top results are used for visualization. We have created a web-based GUI to display these kinds of explanations.
 
-
-
-
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/architecture.eps}
+	\caption{An outline for our system framework}
+	\label{fig:framework}
+\end{figure}
 
 \section{Hierarchical intervention}
 \label{sec:hei_intervention}
 
-
+Spatial data is continuous in the space, which makes it impossible to naturally divide data into buckets like what we have done for the attribute \emph{PayType}. 
+For such type of attribute, one common solution is to partition based on value range. 
+This solution makes sense for one-dimensional attribute. 
+However, spatial data is continuous in 2-Dimensional space. 
+A straight solution to partition data is to use grid cell, which is directly extended from the 1-dimensional's partition based on value range. 
+This method suffers from the data skewness, which means that some grid cells are empty while some grid cells are super crowded. 
+Another problem is to determine the number of partitions. 
+In order to cope with these problems, we propose a solution called {\solution}. 
 
 %\section{Introduction}
 %This section details our approach called Hierarchical Intervention which is an extension of the intervention approach. 
@@ -140,30 +163,30 @@ Depending of the type of spatial partitioning, some nodes in our DAG have incorr
 \subsubsection{Step5: Ranking Explanations}
 \label{sec:extending_hi}
 
-In order to get the most out of Hierarchical Intervention, we introduce two new metrics: Intensity and Influence.
-
-\textbf{Intensity:}
-\label{sec:intensity}
-%What is relevance
-We define intensity as a metric which measures the standalone value of the explanation. The relevance metric borrows a lot from our definition of aggravation. It might be convenient to think of a web search engine when we are looking at the intensity metric. When we use a search engine, we provide a search term as a query. The search engine looks at all the pages in its database and returns the results in order of relevance. The top results in the search engine may not have a significant effect on the entire web if they were to be removed. However, the top result in the search engine has the highest relation to the data. For example, the top result for a search engine which uses tf-idf might be a page containing the highest frequency of the search term\cite{robertson2004understanding}.
-
-%Formal definition of relevance
-Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define intensity as,
-$$intensity = |R(\sigma (D)) - R(\sigma_\phi (D))|$$
-
-\textbf{Influence:}
-\label{sec:influence}
-% What is influence
-We define influence as a metric which measures the value of the explanation compared to the entire dataset. The influence metric borrows from our definition of intervention. The influence metric measures how much the observation would be affected if we remove the data related to our explanation(the \textit{influence} of our explanation on the observation). We can use the analogy of the search engine again here. One of the earliest algorithms used by Google to rank webpages used links to other pages\cite{brin1998anatomy}. The page which was linked the most on a variety of websites was ranked higher. If you remove a highly relevant page, many other pages might not exist. Influence uses the same principle.
-
-%Formal definition of influence
-Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define relevance as,
-$$influence = |R(\sigma(D)) - R(\sigma_{\neg \phi} (D)) |$$
-
-The greater the value of influence, the more its impact on the observation.
-
-Our evaluation metrics suggest that influence and intensity explain data in different ways. Explanations with higher influence tend to give predicates which cover a larger area while explanations with higher intensity tend to give predicates which cover a small area. We can balance out these two metrics according to the preferences of the observer. We define the \textit{explanation index}, $\epsilon$ as:
-$$\epsilon = \alpha \times influence + (1-\alpha) \times intensity$$
-$\alpha$ is the \textit{explanation coefficient}. It is a variable whose value is decided by the user.
-
-Explanations given by Hierarchical Intervention can be ranked on the basis of the explanation index.
+%In order to get the most out of Hierarchical Intervention, we introduce two new metrics: Intensity and Influence.
+%
+%\textbf{Intensity:}
+%\label{sec:intensity}
+%%What is relevance
+%We define intensity as a metric which measures the standalone value of the explanation. The relevance metric borrows a lot from our definition of aggravation. It might be convenient to think of a web search engine when we are looking at the intensity metric. When we use a search engine, we provide a search term as a query. The search engine looks at all the pages in its database and returns the results in order of relevance. The top results in the search engine may not have a significant effect on the entire web if they were to be removed. However, the top result in the search engine has the highest relation to the data. For example, the top result for a search engine which uses tf-idf might be a page containing the highest frequency of the search term\cite{robertson2004understanding}.
+%
+%%Formal definition of relevance
+%Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define intensity as,
+%$$intensity = |R(\sigma (D)) - R(\sigma_\phi (D))|$$
+%
+%\textbf{Influence:}
+%\label{sec:influence}
+%% What is influence
+%We define influence as a metric which measures the value of the explanation compared to the entire dataset. The influence metric borrows from our definition of intervention. The influence metric measures how much the observation would be affected if we remove the data related to our explanation(the \textit{influence} of our explanation on the observation). We can use the analogy of the search engine again here. One of the earliest algorithms used by Google to rank webpages used links to other pages\cite{brin1998anatomy}. The page which was linked the most on a variety of websites was ranked higher. If you remove a highly relevant page, many other pages might not exist. Influence uses the same principle.
+%
+%%Formal definition of influence
+%Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define relevance as,
+%$$influence = |R(\sigma(D)) - R(\sigma_{\neg \phi} (D)) |$$
+%
+%The greater the value of influence, the more its impact on the observation.
+%
+%Our evaluation metrics suggest that influence and intensity explain data in different ways. Explanations with higher influence tend to give predicates which cover a larger area while explanations with higher intensity tend to give predicates which cover a small area. We can balance out these two metrics according to the preferences of the observer. We define the \textit{explanation index}, $\epsilon$ as:
+%$$\epsilon = \alpha \times influence + (1-\alpha) \times intensity$$
+%$\alpha$ is the \textit{explanation coefficient}. It is a variable whose value is decided by the user.
+%
+%Explanations given by Hierarchical Intervention can be ranked on the basis of the explanation index.
