@@ -7,7 +7,8 @@
 
 %\section{Hierarchical intervention}
 %\label{sec:hei_intervention}
-It is not trivial to generate candidate spatial {\explanation}s. 
+The first task is to find candidate spatial {\explanation}s, but
+it is not trivial to generate candidate spatial {\explanation}s. 
 Spatial data is continuous in the space, which makes it impossible to naturally divide data into buckets like what we have done for the attribute \emph{PayType}. 
 For such type of attribute, one common solution is to partition based on value range. 
 This solution makes sense for one-dimensional attribute. 
@@ -19,7 +20,7 @@ In order to cope with these problems, we propose a solution called {\solution}.
 
 %\section{Introduction}
 %This section details our approach called Hierarchical Intervention which is an extension of the intervention approach. 
-The idea behind hierarchical intervention is to improve the generated explanations by grouping spatially co-located polygons in the candidate set of explanations. The whole space is divided into different number of partitions in several levels in pyramid manner. The highest level contains the entire space as one predicate, while each predicate in the lowest level contains one zone or a point.
+%The idea behind hierarchical intervention is to improve the generated explanations by grouping spatially co-located polygons in the candidate set of explanations. The whole space is divided into different number of partitions in several levels in pyramid manner. The highest level contains the entire space as one predicate, while each predicate in the lowest level contains one zone or a point.
 
 
 
@@ -39,25 +40,25 @@ The idea behind hierarchical intervention is to improve the generated explanatio
 %Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by bucketing the attributes. We can extend intervention for spatial observations and explanations the same way we did for aggravation. The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.
 
 %\subsection{Hierarchical intervention overview}
-{\bf Main idea.} The proposed algorithm partitions the data spatially into a hierarchy. 
-The top level of the hierarchy consists of all the tuples in the data. 
-The lowest level of the hierarchy consists of each individual tuple. 
-Each cluster in the hierarchy forms a spatial predicate. 
-We harness this hierarchy to perform the aggravation and intervention approaches for a given fact. 
-Finally, we compare all the clusters in every level of the hierarchy to rank explanations.
+%{\bf Main idea.} The proposed approach partitions the data spatially into a hierarchy. 
+%The top level of the hierarchy consists of all the tuples in the data. 
+%The lowest level of the hierarchy consists of each individual tuple. 
+%Each cluster in the hierarchy forms a spatial predicate. 
+%We harness this hierarchy to perform the {\aggravation} and {\intervention} approaches for a given fact. 
+%Finally, we compare all the clusters in every level of the hierarchy to rank explanations.
 
 %In order to get a better understanding of the spatial explanation approach, we will highlight our algorithm. 
 We have designed our approach in the context of the programming paradigms provided by Apache Spark. 
-The algorithm uses dataframes to store each level in the spatial hierarchy. 
-The leaf nodes are populated using aggravation/intervention operations. 
-The intervention/aggravation values of the non-leaf nodes are populated using the data from children nodes. 
+The algorithm uses DataFrames to store each level in the spatial hierarchy. 
+The leaf nodes are populated using {\aggravation}/{\intervention} operations. 
+The {\aggravation}/{\intervention} values of the non-leaf nodes are populated using the data from children nodes. 
 Since our technique uses memorization in a directed acyclic graph, it can be categorized as a dynamic programming approach.
 
-Figure~\ref{fig:steps} shows the hierarchy in the form of a tree. 
-Nodes with overlapping children are marked using a red dashed line. 
-The children of these nodes represent clusters of tuples which have some common points of intersection. 
-Since we want to build our graph bottom up, such overlaps present a concern. 
-We do not want to use tuples multiple times in our calculations.
+%Figure~\ref{fig:steps} shows the hierarchical tree structure of the data. 
+%Nodes with overlapping children are marked using a red dashed line. 
+%The children of these nodes represent clusters of tuples which have some common points of intersection. 
+%Since we want to build our graph bottom up, such overlaps present a concern. 
+%We do not want to use tuples multiple times in our calculations.
 
 % We represent each node in our hierarchy in a dataframe(Fig.~\ref{fig:steps}). The dataframe contains the id of the node($tid$), the id of the parent node($parent$), intervention, aggravation, aggregates of each attribute, and a column for intervention and aggravation for each aggregate query in our input. While dataframes look like traditional RDBMS tables, they have a few differences. Our solution exploits these differences to get more out of the system. In this case, we use the arbitrary number of columns in the dataframe to our advantage by representing the aggravation/intervention for each query in a separate column.
 
@@ -102,7 +103,13 @@ Once we have built up our DAG one level, we still have tuples which contain inco
 
 
 \subsubsection{Step1: Spatial Partitioning/Clustering}
-There are several approaches to cluster data. Each clustering approach has a large impact on the resulting explanations. In order to understand the issues with explanations using spatial clustering, the hierarchical intervention approach can easily plug-in an existing clustering method and their impacts are studied in Section~\ref{sec:evaluation}.
+Since it is hard to decide the granularity of the {\explanation}, our approach partitions the data spatially into a hierarchy. 
+Figure~\ref{fig:steps} shows the hierarchical tree structure of the data. 
+The top level of the hierarchy consists of all the tuples in the data. 
+The lowest level of the hierarchy consists of each individual tuple. 
+Each cluster in the hierarchy can be used as a predicate to form a spatial {\explanation}. 
+In this way, {\explanation}s on different levels have different granularities. 
+Several approaches can be used to cluster spatial data. The clustering method has a large impact on the resulting explanations. The impact of clustering method will be studied in Section~\ref{sec:evaluation}.
 
 %{\bf R-Tree} An R-Tree is a data structure which is commonly used for spatial data indexing. The idea behind the R-Tree is similar to the idea behind a binary tree i.e. It is faster to query data if it is stored in the form of a hierarchy\cite{guttman1984r}. In an R Tree, this hierarchy exists in the form of Minimum Bounding Rectangles(MBR). The top level of an R Tree consists of a set of MBRs which cover a large spatial area. Each MBR can now be subdivided into further MBRs which makes up the second level of the tree and so forth. At the leaf nodes of the tree, each node consists of a single object in our underlying data.
 
@@ -129,24 +136,46 @@ There are several approaches to cluster data. Each clustering approach has a lar
 
 % Greedy Hierarchical Clustering turned out to have a drawback when we use it for explanations. It selects seed points randomly. This means that in each level, the clusters can be highly imbalanced. We compared this approach to K means(Voronoi partitioning)\cite{hartigan1979algorithm,aurenhammer2000voronoi}, R Tree\cite{guttman1984r} and R* Tree\cite{beckmann1990r}.
 
-The main idea behind the hierarchical intervention approach, regardless of the partitioning algorithm, is to help us in increasing the domain for our degree of explanation. Since intervention is a subset of this approach, the domain is at least as large as that for intervention. After we have partitioned our data, each partition can be used as a predicate for aggravation and/or intervention.
+%The main idea behind the {\solution} approach is to help us in increasing the domain for our degree of explanation. 
+%Since intervention is a subset of this approach, the domain is at least as large as that for intervention. After we have partitioned our data, each partition can be used as a predicate for aggravation and/or intervention.
 
-\subsubsection{Step2: Hierarchical Dataframes Construction}
-In our implementation of the system, we use the programming paradigm provided by Apache Spark. This involves using dataframes for processing. Dataframes resemble tables in a traditional RDMS. Each cluster in our spatial hierarchy is represented as a node in a tree. Each level of the tree is encapsulated as a dataframe. Each node has an ID associated with it. A tuple in our dataframe contains the ID of the node, the ID of the parent node, a column representing the overlap bit, columns representing the aggregates of the attributes, columns representing the aggravation/intervention for each query in our observation, and a column for the final values of aggravation/intervention after evaluating the arithmetic operation that represents our observation. 
+\subsubsection{Step2: Hierarchical DataFrames Construction}
+In our implementation of the system, we utilize the programming paradigm provided by Apache Spark. This involves using DataFrames for processing. Dataframes resemble tables in a traditional RDBMS. Each spatial {\explanation}in our spatial hierarchy is represented as a node in a tree. Each level of the tree is encapsulated as a DataFrame. Each node has an ID associated with it. Each tuple in our DataFrame is stored with the ID of the node that contains it, the ID of the parent node, a column representing the overlap bit, columns representing the aggregates of the attributes, columns representing the aggravation/intervention for each query in our observation, and a column for the final values of aggravation/intervention after evaluating the arithmetic operation that represents our observation. 
 
-The spatial hierarchy that we construct in step 1 of our algorithm is already a DAG since it takes the form of a tree. But for the next few steps, the DAG that we use is based on the dataframes. Instead of calculating aggravation and intervention for each tuple in our set of dataframes, we can use the values calculated in the leaf dataframe to build up the explanations.
+%The spatial hierarchy that we construct in step 1 of our algorithm is already a DAG since it takes the form of a tree. But for the next few steps, the DAG that we use is based on the DataFrames. Instead of calculating {\aggravation} and {\intervention} for each node DataFrames, we can reuse the values calculated in the leaf DataFrame for higher level DataFrames.
 
 \subsubsection{Step3: Building up the DAG}
-Aggravation and Intervention are very expensive operations. In order to create a system for explanations which performs well, we need to reuse calculations. Thats the main reason we constructed our DAG in the first place. The intervention/aggravation values stored in one level of our DAG can be used one level above. We use the associative property of aggregate functions like sum and count to build our DAG bottom up. We use the group and join operations to implement this. The tuples at one level are grouped based on the parent id and left joined with the tuples at the parent level based on the node id and parent id of the child and parent dataframes respectively. 
-
-Our system is designed to work with arbitrary clustering algorithms. Some of the clustering algorithms like K-Means have no overlapping tuples in the clusters with others like R-Tree have partitions with overlaps. In our spatial hierarchy if a node has child nodes with overlapping points, the overlap bit for that node is set to $true$. Using our build up approach so far, these nodes contain inaccurate values of intervention and aggravation. Before building the DAG further up these values need to be fixed.
+{\aggravation} and {\intervention} are very expensive operations. 
+%In order to create a system for explanations which performs well, we need to reuse calculations. Thats the main reason we constructed our DAG in the first place. 
+In order to improve the performance of the system, we reuse the values calculated in the leaf DataFrame to compute the values for higher level DataFrames. 
+%The intervention/aggravation values stored in one level of our DAG can be used one level above. 
+We use the associative property of aggregate functions like sum and count to build our DAG bottom up. 
+The bottom-up procedure can be implemented by using group and join operations in DataFrames. 
+%The tuples at one level are grouped based on the parent id and left joined with the tuples at the parent level based on the node id and parent id of the child and parent dataframes respectively. 
+The tuples at one level are grouped based on the parent id.  
+Then the lower level DataFrame is left joined with the parent level DataFrame based on parent id of the child DataFrame and tuple id of the higher level DataFrame. 
 
 \subsubsection{Step4: Overlap Resolution}
-Depending of the type of spatial partitioning, some nodes in our DAG have incorrect values of aggravation/intervention stored in the dataframe. These are nodes where the overlap bit is $true$. Since we are using dataframes, we cannot update individual tuples. Instead, we create two dataframes out of the original. One containing tuples where the overlap bit is true and one containing the rest of the tuples. The aggravation/intervention and aggregates for the first dataframe are recalculated. Finally both the dataframes are combined using union and the old dataframe is replaced with the new one in the DAG. Using this sequence of operations, we can reduce the number of calculations. Since our dataframe now contains accurate information, we can resume building the DAG further up.
+Our system is designed to work with arbitrary clustering algorithms. 
+Some of the clustering algorithms like K-Means have no overlapping tuples in the clusters while others like R-Tree have partitions with overlaps. 
+In this case, a node in the hierarchy can have children that share common data tuples. 
+Then the computation of the value on current node cannot be implemented by directly merging the results from its children. 
+The way to handle the overlap cases is to store a bit value.
+If a node has overlapped children, the overlap bit for this node is set to \emph{true}. 
+%In our spatial hierarchy if a node has child nodes with overlapping points, the overlap bit for that node is set to $true$. 
+%Using our build up approach so far, these nodes contain inaccurate values of intervention and aggravation. Before building the DAG further up these values need to be fixed.
+Due to the immutability of DataFrames, we create one more DataFrame for the nodes whose overlap bit is \emph{true}. 
+In each level, nodes whose overlap bit is \emph{false} can reuse values from their children. Nodes in the DataFrame with \emph{true} overlap bit will be recomputed to get the correct values. 
+Then the built-up procedure is resumed. 
+
+%Depending of the type of spatial partitioning, some nodes in our DAG have incorrect values of aggravation/intervention stored in the dataframe. These are nodes where the overlap bit is $true$. 
+%Since we are using dataframes, we cannot update individual tuples. Instead, we create two dataframes out of the original. One containing tuples where the overlap bit is true and one containing the rest of the tuples. 
+%The aggravation/intervention and aggregates for the first dataframe are recalculated. Finally both the dataframes are combined using union and the old dataframe is replaced with the new one in the DAG. Using this sequence of operations, we can reduce the number of calculations. Since our dataframe now contains accurate information, we can resume building the DAG further up.
 
 
 \subsubsection{Step5: Ranking Explanations}
 \label{sec:extending_hi}
+In this step, the system accumulate the {\intensity} and {\influecne} values for all the {\explanation}s on all levels. Their values of {\newvalue} will be computed and sorted. The top-K {\explanation} will be output as the final result. 
 
 %In order to get the most out of Hierarchical Intervention, we introduce two new metrics: Intensity and Influence.
 %
