@@ -27,22 +27,34 @@ This dataset includes the pick-up and drop-off location of the taxi trips and th
 %\textbf{Experimental Setup}. The speed of each approach is simply the time taken to calculate the explanations. Since all the approaches are implemented on top of distributed systems, the time varies depending on the number of nodes used. We experimented with calculating explanations for 1,3, and 5 months in a distributed environment. For the cluster, we used Google Compute Engine nodes(1 vCPU, 3.5GB RAM, 4 nodes). All the nodes in our cluster had the same specifications. The Aggravation, Intervention and Hierarchical Intervention were tested on Apache Spark running on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN.
 
 \subsection{Spatial partitioning methods}
-\begin{figure}[h]
+\begin{figure}[t]
 \includegraphics[width=\columnwidth]{images/hieint_passenger_count}
 \caption{Comparison of Influence and Intensity against level of hierarchy with average passenger count as observation}
 \label{fig:hieint_passenger_count}
 \end{figure}
 Spatial explanation requires to create spatial predicate which partition the whole dataset into different spatial partitions. In our evaluation, we consider three spatial partitioning methods, R-Tree, R* Tree and K-means. 
 Fig. \ref{fig:clustering_comparison} shows the influence of different partitioning methods with different number of clusters. 
-It shows that R-Tree and R* Tree partitioning are usually more stable than K- Means. The stability of the clustering technique is referring to its monotonicity of the explanation as a function of the number of clusters. Fig.~\ref{fig:hieint_passenger_count} shows the influence against the number of hierarchy levels where the observation is the average passenger count. The influence and intensity are closer to a sinusoidal curve than a exponential or logarithmic curve. Fig.~\ref{fig:clustering_comparison} shows another observation and a plot of the influence of R-Tree and R*-Tree as well. The influence as a function of the number of clusters is a lot more monotonic here. Furthermore, R* Tree has a higher influence on average compared to other approaches making it a lot more suitable for explanations.
+The stability of the clustering technique is referring to its monotonicity of the explanation as a function of the number of clusters. 
+It shows that R-Tree and R* Tree partitioning methods are more stable than K-Means. 
+Furthermore, R* Tree has a higher influence on average compared to other approaches making it a lot more suitable for explanations.
+
+The candidate spatial {\explanation}s are in different levels of the hierarchy. 
+Fig.~\ref{fig:hieint_passenger_count} shows the {\influence} against the number of hierarchy levels where the observation is the average passenger count. 
+The influence and intensity tend to oscillate when the level of hierarchy changes.
+The changing shape is closer to a sinusoidal curve than a exponential or logarithmic curve. 
+The reason for the oscillation is when merged to a higher level, the {\explanation} can be enhanced or weakened. 
+If the children {\explanation} all have the positive intensity and influence, the parent {\explanation} will be enhanced. 
+Otherwise, the value will decrease. 
+%Fig.~\ref{fig:clustering_comparison} shows another observation and a plot of the influence of R-Tree and R*-Tree as well. The influence as a function of the number of clusters is a lot more monotonic here. 
+%Furthermore, R* Tree has a higher influence on average compared to other approaches making it a lot more suitable for explanations.
 %Reasons for selecting evaluation criteria
-The qualitative evaluation that we define is based on K-Folds cross validation. The reason for selecting these evaluations is to measure how the top explanations provided by each approach fair as stand alone parts of data as well as their effects on the entire dataset as a whole. Other than qualitative analysis we look at the speed and scalability of each approach for performance evaluation.
+%The qualitative evaluation that we define is based on K-Folds cross validation. The reason for selecting these evaluations is to measure how the top explanations provided by each approach fair as stand-alone parts of data as well as their effects on the entire dataset as a whole. Other than qualitative analysis we look at the speed and scalability of each approach for performance evaluation.
 
 
 
 %How does each approach compare
-\textbf{Influence Comparison.}
-Fig.~\ref{fig:influence_comparison} shows the comparison between the influence of different approaches. Salient features and Aggravation have a very low influence compared to Intervention and hierarchical intervention. This is because the explanations provided by those approaches cover a very small portion of the entire dataset. This makes removing the associated data have a negligible impact on the entire data.
+\subsection{Influence Comparison.}
+Fig.~\ref{fig:influence_comparison} shows the comparison between the influence of different approaches. Salient features and {\aggravation} have a very low influence (close to 0) compared to Intervention and hierarchical intervention. This is because the explanations provided by those approaches cover a very small portion of the entire dataset. This makes removing the associated data have a negligible impact on the entire data.
 \begin{figure}[h]
 \includegraphics[width=\columnwidth]{images/Top_explanations_for_avg_tip_percentage_influence}
 \caption{Influence for Spatial explanation for average tip percentage(Lower is better)}
@@ -54,19 +66,28 @@ In order to qualitatively assess the solutions, we use K-Folds cross validation\
 %\section{K-Folds Cross Validation}
 K Folds cross validation is a technique for data evaluation\cite{kohavi1995study,refaeilzadeh2009cross}. The data is divided into $k$ parts. One of the parts is used as a training set and the remaining parts are used as test sets. The purpose of the training set is to model the data. Once we have a model, we can use it to classify and/or predict unseen data. The test set is used to evaluate how well the model was trained.
 
-Since we do not have ground truth for our explanations, we have to make a compromise in terms of estimating how good our solution is. Our assumption here is that in general, a good explanation would stand out on unseen data i.e. given a good explanation on part of the data, it would give similar results on unseen parts of the data. This is the same assumption that was made by \cite{chirigati2016data} in their evaluation of the Data Polygamy framework. We split the data into $k$ parts. The data was divides by the month of the year. This is because there are specific observable patterns in each month, e.g. weekends have less density of trips than the weekdays for the dataset we evaluated. One of the parts is used to find the explanation(the training data). The rest of the data is the test data. We also calculate an explanation of the test data. The relative distance between the explanation index of the test data and the explanation index of the explanation provided by the training data when applied to the test data is used as a measure of evaluation.
+Since we do not have ground truth for our explanations, we have to make a compromise in terms of estimating how good our solution is. Our assumption here is that in general, a good explanation would stand out on unseen data i.e. given a good explanation on part of the data, it would give similar results on unseen parts of the data. This is the same assumption that was made by \cite{chirigati2016data} in their evaluation of the Data Polygamy framework. 
+% Add here
+We use the first 5 months data from  NYC yellow cab dataset in 2016. The data spanned ~50 million trips. 
+%%%%
+We split the data into 5 parts. Each month of data forms one part. 
+%The data was divides by the month of the year. 
+This is because there are specific observable patterns in each month, e.g. weekends have less density of trips than the weekdays for the dataset we evaluated. 
+One of the parts is used to find the explanation (the training data). The rest of the data is the test data. 
+%We also calculate an explanation of the test data. 
+%The relative distance between the explanation index of the test data and the explanation index of the explanation provided by the training data when applied to the test data is used as a measure of evaluation.
 
+%\textbf{Experimental Setup}. We performed the evaluation on the first 5 months of data from the NYC yellow cab dataset from 2016. The data spanned ~ 50 million trips. The $k$ for our evaluation was $5$. This value was chosen after a series of experiments. We wanted the size of each partition to be large enough to support our generalization assumption. If the solution space for evaluation is small, it leads to inconsistent results. Each month represented a partition for k-folds evaluation. According to our analysis, we found that the approach works very well with low values of alpha. Fig.~\ref{fig:kfolds} shows some of the results of our evaluation for a number of observations. The lower the value of the relative distance, the better the results.
 
-
-\textbf{Experimental Setup}. We performed the evaluation on the first 5 months of data from the NYC yellow cab dataset from 2016. The data spanned ~ 50 million trips. The $k$ for our evaluation was $5$. This value was chosen after a series of experiments. We wanted the size of each partition to be large enough to support our generalization assumption. If the solution space for evaluation is small, it leads to inconsistent results. Each month represented a partition for k-folds evaluation. According to our analysis, we found that the approach works very well with low values of alpha. Fig.~\ref{fig:kfolds} shows some of the results of our evaluation for a number of observations. The lower the value of the relative distance, the better the results.
-
-The relative distance in the K Folds cross validation represents how much the explanation impact changes when we look at the explanations in the context of unseen data. A relative distance of zero represents that the explanation has the same impact on unseen data as if we had seen the data. A relative distance of one would represent that the top explanation for the unseen data has nothing in common with the explanation of seen data. Let $e_{test}$ be the explanation index for the test set. Let $e_{train}$ be the explanation index for the training set. Then,
-
+We define the relative distance to measure the quality of the {\explanation}:
+%The relative distance in the K Folds cross validation represents how much the explanation impact changes when we look at the explanations in the context of unseen data. A relative distance of zero represents that the explanation has the same impact on unseen data as if we had seen the data. A relative distance of one would represent that the top explanation for the unseen data has nothing in common with the explanation of seen data. Let $e_{test}$ be the explanation index for the test set. Let $e_{train}$ be the explanation index for the training set. Then,
 $$relative\_distance = \frac{|e_{test}-e_{train}|}{|e_{test}+e_{train}|}$$
+where $e_{train}$ and $e_{test}$ denote the top {\explanation} for the training and test dataset respectively. 
+The relative distance metric was chosen because of its nature of showing a steep decline when two solutions do not match. It is also ideal because it caters to the different types of {\fact}s that a user can specify. Since the {\fact} in our system are defined as an arithmetic operation over aggregate queries, they do not have bounds on their values. Thus, it makes relative distance a useful metric for measuring similarity.
 
-The relative distance metric was chosen because of its nature of showing a steep decline when two solutions do not match. It is also ideal because it caters to the different types of observations that a user can specify. Since the observations in our system are defined as an arithmetic operation over aggregate queries, they do not have bounds on their values. Thus, it makes relative distance a useful metric for measuring similarity.
+\input{k_fold_figure}
 
-Here are the observations that we show in Fig.~\ref{fig:kfolds}:
+Here are the {\fact}s that we show in Fig.~\ref{fig:kfolds}:
 \renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
 \begin{lstlisting}[language=SQL, caption=o1 for Fig.~\ref{fig:kfolds}, label=qry:o1]
 Select count(*) as q1 
@@ -199,7 +220,7 @@ The speed of each approach is simply the time taken to calculate the explanation
 
 \textbf{Experimental Setup}. The speed of each approach is simply the time taken to calculate the explanations. Since all the approaches are implemented on top of distributed systems, the time varies depending on the number of nodes used. We experimented with calculating explanations for 1,3, and 5 months in a distributed environment. For the cluster, we used Google Compute Engine nodes(1 vCPU, 3.5GB RAM, 4 nodes). All the nodes in our cluster had the same specifications. The Aggravation, Intervention and Hierarchical Intervention were tested on Apache Spark running on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN.
 \begin{figure}[h]
-\includegraphics[width=\columnwidth]{images/performance}
+\includegraphics[width=\columnwidth]{images/performance.eps}
 \caption{Time taken by each approach as we increase the size of data}
 \label{fig:performance}
 \end{figure}
