@@ -1,3 +1,151 @@
+
+\section{Spatial Explanations}
+
+To deciding whether an {\explanation} is a useful {\explanation} or not, we define two main metrics to measure that, namely intensity and influence. 
+
+{\bf Intensity:} We define intensity as a metric which measures the {\fact} value of the explanation (the subset of dataset). Given a {\fact} $Q$ to be explained, the intensity of an {\explanation} $\phi$ can be as follows:
+$$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
+%Formal definition of relevance
+where $D$ is the dataset and $D_\phi$ is the subset of the data represented by the {\explanation} $\phi$. $dir$ is 1 if the direction is high and -1 otherwise. 
+The intuitive behind Intensity is as follows: an {\fact} $F$ indicates a value of $Q$ which is higher or lower than normal (direction). A good {\explanation} should has the highest deviation from the whole dataset then it can push the value of $Q$ to the same direction. 
+%The relevance metric borrows a lot from our definition of aggravation. 
+%It might be convenient to think of a web search engine when we are looking at the intensity metric. When we use a search engine, we provide a search term as the query input. The search engine looks at all the pages in its database and returns the results in order of relevance. The top results in the search engine may not have a significant effect on the entire web if they were to be removed. However, the top result in the search engine has the highest relation to the data. For example, the top result for a search engine which uses tf-idf might be a page containing the highest frequency of the search term\cite{robertson2004understanding}.
+
+
+\textbf{Influence:}
+% What is influence
+%We define influence as a metric which measures the value of the explanation compared to the entire dataset. The influence metric borrows from our definition of intervention. The influence metric measures how much the observation would be affected if we remove the data related to our explanation(the \textit{influence} of our explanation on the observation). We can use the analogy of the search engine again here. One of the earliest algorithms used by Google to rank webpages used links to other pages\cite{brin1998anatomy}. The page which was linked the most on a variety of websites was ranked higher. If you remove a highly relevant page, many other pages might not exist. Influence uses the same principle.
+Influence measures how much the {\fact} would be affected if we remove the data represented by the {\explanation}. 
+%Formal definition of influence
+%Let $D$ be our dataset. Let $\phi$ be our candidate explanation. Let $R$ be the function which maps our dataset to the value of our observation. Then we can define relevance as,
+It is defined as follows:
+$$influence = dir \cdot (Q (D) - Q(D_{\neg \phi})) $$
+where $D_{\neg \phi}$ represents remaining part of the dataset after removal of tuples in the {\explanation}. The intuitive behind influence is after removing the {\explanation} tuples, the remaining dataset should have the value of $Q$ towards the opposite direction as possible. Then it means the removal data has high impact on $Q$. 
+%The greater the value of influence, the more its impact on the observation.
+
+\begin{table}
+	\centering
+	\caption{Intensity and influence for example {\explanation}s}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		PayType & \# on 22, Jan & \# on 23, Jan & Intensity & Influence\\ \hline
+		% -1 * ((4000 / 25000) - 1/7) --> intensity
+		% -1 * (1/7 - 1000 / 10000) --> influence
+		% -1 * (1/7 - 4100 / 27000)
+		% -1 * (1/7 - 4900 / 33000)
+%		1 & 25000 & 4000 & -0.02& -0.04\\ \hline
+%		2 & 8000 & 900  & 0.03& 0.009\\ \hline
+%		3 & 2000 & 100  & 0.09& 0.006\\ \hline
+		1 & 282817 & 78133 & 0.010& 0.021\\ \hline
+		2 & 134365 & 27789  & -0.02& -0.01\\ \hline
+		3 & 1445 & 507  & -0.16& -0.0005\\ \hline
+		4 & 535 & 169  & -0.13& -0.0006\\ \hline
+		$\phi_S$ & 278852 &  41526 & 0.037 & 0.073\\ \hline
+		Total	& 420162 & 78133 &- & - \\ \hline			
+%		Total	& 35000 & 5000  &- & - \\ \hline			
+	\end{tabular}
+	\label{table:intensity_influence_example}
+\end{table}
+
+%{\bf Example.} 
+Table~\ref{table:intensity_influence_example} shows the number of taxi trips on January 22$^{nd}$ and 23$^{rd}$. The number of trips for each payment type is also listed in the table. Assume our candidate {\explanation} are: \{$\phi_1$: PayType = 1, $\phi_2$: PayType = 2, $\phi_3$: PayType = 3, $\phi_4$: PayType = 4\}.
+%\begin{itemize}
+%	\item $\phi_1$: PayType = 1;
+%	\item $\phi_2$: PayType = 2;
+%	\item $\phi_3$: PayType = 3.
+%	\item $\phi_4$: PayType = 4.
+%\end{itemize}
+%For the whole dataset, $Q(D) = 1/7$. 
+%For each {\explanation}, its intensity and influence are listed in Table \ref{table:intensity_influence_example}. We can notice that the best {\explanation} considering intensity is $\phi_3$ it is because $\phi_3$ has the highest reduction factor for itself. Regarding influence, the best {\explanation} is $\phi_2$. The reason is although its reduction factor is less than $\phi_3$, it has larger volume and its influence is larger when its tuples are removed from the dataset.
+For the whole dataset, $Q(D) = 0.186$. 
+For each {\explanation}, its intensity and influence are listed in Table \ref{table:intensity_influence_example}. We can notice that the best {\explanation} considering intensity is $\phi_1$ it is because $\phi_1$ has the highest decreasing ratio from 22nd to 23rd, Jan. Regarding influence, the best {\explanation} is still $\phi_1$. The reason is its value for the {\fact} is low and its data volume is high. The high volume ensures its high impact after removing it from the dataset.
+
+From such an example, we can also find out the drawback of the two approaches. Intensity focuses on the {\explanation} itself without considering the size of the {\explanation}. As a result, a selective {\explanation} can have high intensity but have low impact on the {\fact} because of its small size. Regarding influence, since it focuses the remaining data, it overlooks the $Q$ value for the {\explanation} itself. Influence also tends to measure larger-sized {\explanation} to be more important. 
+
+Due to their drawbacks, we define a new metric, {\newvalue}, which balance out these two metrics according to the preferences of the user: 
+$$\epsilon = \alpha \times influence + (1-\alpha) \times intensity$$
+where $\alpha$ is the \textit{explanation coefficient}. It is a variable whose value is decided by the user.
+
+%{\bf {Explanation via Intervention.}} 
+%%\my{Intervention is an approach inspired by the concept of influence. It builds on the \my{aggravation} approach(Section~\ref{sec:aggravation}).}
+%\my{aggravation suddenly appear in this paragraph. Do we still mention aggravation.}. 
+%The Intervention approach measures how much the {\fact} would change had the explanation not been present. Let $D$ be the dataset we are interested in and $Q$ be a function which returns the value of our target {\fact} given a dataset. Keeping our taxonomy in context, this means $Q$ returns the value of our \my{aggregate} {\fact} query. Denote $\phi$ as one candidate {\explanation}. 
+%%Let $\Delta_\phi \leftarrow \sigma_\phi(D)$ be a subset of $D$ that satisfy $\phi$. 
+%Let $D_{\phi}$ be a subset of $D$ that satisfy $\phi$. 
+%Then $D - D_{\phi}$ represents the remaining part after removing $D_{\phi}$ from $D$. The direction of the {\fact} can either be \textit{high} or \textit{low} depending on whether we are interested in the greatest or least values of {\fact} respectively. Given a dataset $D$, a {\fact}$(Q, dir)$, the degree of an {\explanation} $\phi$ by intervention can be defined as follows:
+%\begin{equation}
+%\delta_{int(Q, dir)}(\phi):=
+%\begin{cases}
+%-Q(D-D_{\phi}), & \text{if}\ direction=high \\
+%Q(D-D_{\phi}), & \text{otherwise}
+%\end{cases}
+%\end{equation}
+%
+%The degree of candidate explanation by intervention must be higher the closer we are to the direction of the observation, therefore, we use the negative value when the direction is high. If the influence of the candidate explanation is high, it will result in a low observation value once the candidate explanation is removed from the dataset.
+%\my{Since intervention extends the idea presented by aggravation, it has similar issues when it comes to the number of permutations for candidate explanations. 
+%Similar to our approach in aggravation(Section~\ref{sec:aggravation}), we can reduce the number of permutations by \my{bucketing} the attributes.} We can extend intervention for spatial observations and explanations the same way we did for aggravation. \my{The set $P$ consists of distinct non overlapping polygons in our dataset $D$. Let $s$,$t$ be the spatial attributes in $D$. Each tuple in $P$ has two attributes: $polygon\_id$, and $polygon$.}
+%
+%For instance, given the example {\fact} $(q_1/q_2, low)$ and the {\explanation} $\phi: PaymentType = 1$, the intervention $\delta_{int(Q, dir)}(\phi)$ can be computed by evaluating $q_1/q_2$ on the subset data $D-D_\phi$. If the {\explanation} is reasonable, the value of intervention should be far larger than the $Q$ on the original dataset $D$. But actually the intervention value of this {\explanation} does not change much from $D$. So it again proves that such {\explanation} does not make sense.
+
+{\bf Spatial Explanations.}
+%{\bf Spatial {\Explanation}.} 
+For the previous example, values of both intensity and influence are quite small. 
+That means that the example {\explanation}s may not be useful enough to explain the {\fact}. 
+So we propose another type of {\explanation}, spatial {\explanation}. 
+A spatial {\explanation} is an {\explanation} whose predicate is a spatial range predicate. A spatial {\explanation} actually indicates a set of data tuples that satisfy the range predicate. We denote a spatial {\explanation} as $\phi_S$. 
+Spatial {\explanation}s take the spatial attributes of the data into consideration. In contrast to non-spatial explanations, the candidate spatial explanations consists of polygons. 
+%Since we base our proposed approach on the assumption that important tuples are spatially co-located, points which fall inside these polygons form a candidate explanation. 
+The intuition behind the spatial {\explanation} is that a {\fact} can be caused by an incident. If an incident happens in a place, then it has an effect on a specific region. 
+As a result, data tuples in the reasonable {\explanation} should be spatially co-located. 
+%Let $S$ be the spatial attributes of $D$ and $P$ be the set of all possible polygons that can be formed from $S$. Let $G$ be a function such that$G(s,t)$ is true when $(s,t) \in P$ and false otherwise, where $s$,$t$ are the dimensions of a point in the Cartesian plane. Our candidate explanation can be defined as,
+%$$\phi  \models \vee_{l,k} G(l,k)$$
+%where $k,l \in A_D$
+
+%\my{This example should be modified because it looks like a non-spatial explanation.}
+%To illustrate spatial explanation in action, we can use NYC TLC data again. Fig.~\ref{fig:spatial_explanation_example} shows the explanation in terms of tip percentage where the observation is also the average tip percentage.
+
+%\begin{figure}[ht]
+%\includegraphics[width=\columnwidth]{images/spatial_explanation_example.eps}
+%\caption{An example of spatial explanation}
+%\label{fig:spatial_explanation_example}
+%\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.49\textwidth]{images/spatial_explanation_map.eps}
+	\caption{Spatial {\explanation} example}
+	\label{fig:spatial_explanation_example}
+\end{figure}
+
+%{\bf Example.} 
+Figure~\ref{fig:spatial_explanation_example} shows an example for a spatial {\explanation}. The red rectangle in the figure is a spatial {\explanation}. Such explanation consists of the data tuples whose drop-off locations are within the rectangle. The number of trips for this {\explanation} on 22nd and 23rd, Jan and the intensity, influence values are listed in Table \ref{table:intensity_influence_example}. We can notice that such {\explanation} has much higher intensity and influence than all the other {\explanation}s. It means that considering spatial location can give us better {\explanation} for such {\fact}. 
+
+%the heatmap for the value of $Q = q_1 / q_2$. It shows that the high values are located closely which means the {\fact} that the decreasing of the number of trips are caused by the trips that happen in some specific regions. Spatial aspect plays an important role in the {\fact} {\explanation} question. So the problem comes to how to detect these regions in a convenient and efficient way. In the following section, we will discuss about our solution.
+
+%The polygons painted purple show polygons in the candidate {\explanation} where the tip percentage is high, while polygons painted blue show candidate explanations where the tip percentage is low. It should be noted that $P$ has a high number of permutations. It is up to the approach to decide which polygons to include in the candidate explanation. For instance, hierarchical intervention may choose polygons in a spatial proximity while aggravation may choose otherwise.
+%\begin{figure}[t]
+%\includegraphics[width=\columnwidth]{images/scatter}
+%\caption{Heatmap for NYC trips for January 2016}
+%\label{fig:square_unit_grid}
+%\end{figure}
+
+%\my{Another interesting consideration when we are talking about spatial explanations is the density of the data. Fig.~\ref{fig:square_unit_grid} shows the heatmap for tip percentage with respect to pickup coordinates. It is interesting to observe that the explanations provided in Fig.~\ref{fig:spatial_explanation_example} are all areas with low density of data. One of the reasons for this is because each approach takes some liberty with our definition of the taxonomy. Even though, we defined $P$ to contain all permutations of polygons, an approach may use limited polygons, such as neighborhoods or zones. The way the explanation is ranked also plays a large role.}
+
+
+
+
+% \section{Front End Visualization Tools}
+% React\cite{reactjs} is a front end framework which originated in Facebook. The React framework allows interfaces to be designed using components. Each component has properties and a state. A component can have subcomponents. This makes it simpler to design interfaces which show consistent data across components. Some of the charts included in the interface make use of the eCharts library\cite{echarts}.
+
+% MapBox\cite{mapbox} is a library for displaying maps. The maps provided by mapbox consists of tiles and vectors. Each tile represents a cube of the map while vectors are shapes which represent roads, buildings, etc. Deck.gl\cite{deckgl} is a library for creating an overlay on top of the map. Examples of overlays include scatterplots, cartograms etc. Matplotlib was also used for static plots for evaluation\cite{hunter2007matplotlib}.
+
+% We have used all of these tools in a GUI for our our framework. The details of the implementation can be found in Section~\ref{sec:implementation}
+
+
+
+
+
+
 \section{Hierarchical intervention}
 \label{sec:hei_intervention}
 %\section{System Overview}
