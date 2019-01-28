@@ -88,30 +88,26 @@ The relative distance metric was chosen because of its nature of showing a steep
 \input{k_fold_figure}
 
 Here are the {\fact}s that we show in Fig.~\ref{fig:kfolds}:
-\renewcommand{\lstlistingname}{Query}% Listing -> Algorithm
-\begin{lstlisting}[language=SQL, caption=o1 for Fig.~\ref{fig:kfolds}, label=qry:o1]
+\renewcommand{\lstlistingname}{{Fact}}% Listing -> Algorithm
+\begin{lstlisting}[language=SQL, caption=q1/q2, label=qry:o1]
 Select count(*) as q1 
 from data where payment_type=1;
 
 Select count(*) as q2 
 from data where payment_type=2;
-Observation = q1/q2
 \end{lstlisting}
 
-\begin{lstlisting}[language=SQL, caption=o2 for Fig.~\ref{fig:kfolds}, label=qry:o2]
+\begin{lstlisting}[language=SQL, caption=q1, label=qry:o2]
 Select AVG(trip_distance) as q1 
 where passenger_count=4;
-Observation = q1
 \end{lstlisting}
 
-\begin{lstlisting}[language=SQL, caption=o3 for Fig.~\ref{fig:kfolds}, label=qry:o3]
+\begin{lstlisting}[language=SQL, caption=q1/q2, label=qry:o3]
 Select count(*) as q1 
 from data where vendorid=1;
 
 Select count(*) as q2 
 from data where vendorid=2;
-
-Observation = q1/q2
 \end{lstlisting}
 
 \subsection{Precision and Recall}
