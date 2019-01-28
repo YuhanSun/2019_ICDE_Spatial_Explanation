@@ -87,7 +87,7 @@ The relative distance metric was chosen because of its nature of showing a steep
 
 \input{k_fold_figure}
 
-Here are the {\fact}s that we show in Fig.~\ref{fig:kfolds}:
+Here are the {\fact}s that we use in the experiment:
 \renewcommand{\lstlistingname}{{Fact}}% Listing -> Algorithm
 \begin{lstlisting}[language=SQL, caption=q1/q2, label=qry:o1]
 Select count(*) as q1 
@@ -109,6 +109,8 @@ from data where vendorid=1;
 Select count(*) as q2 
 from data where vendorid=2;
 \end{lstlisting}
+
+Figure \ref{fig:kfolds} demonstrates the relative distance of the three {\fact}s mentioned previously. We can observe that both {\aggravation} and {\intervention} have low relative distance, which means that the best {\explanation} in the training data share few common tuples with the best {\explanation} in the test data. Compared to them, the {\explanation} detected by {\solution} have more overlapped tuples in the training data and the test data. 
 
 \subsection{Precision and Recall}
 % \begin{wrapfigure}{L}{0.5\textwidth}
