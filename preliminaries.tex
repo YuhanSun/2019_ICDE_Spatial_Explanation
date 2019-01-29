@@ -71,10 +71,31 @@ Users may discover {\fact}s by querying the data stored in the spatial database.
 %For instance, the user might observe the drastic drop in the number of taxi trips on January 23, 2016 from the histogram in Figure \ref{fig:yellowstats}.
 %{\bf Example.} 
 For example, in Figure \ref{fig:yellowstats}, there exists a {\fact} that the number of taxi trips in NYC on January 23$^rd$, 2016 dropped drastically. Such a {\fact} can be represented by two queries, $q_1$ and $q_2$ as follows:
-\begin{itemize}
-	\item Aggregate Query for the number of trips on January 22.
-	\item Aggregate Query for the number of trips on January 23.
-\end{itemize}
+%\begin{verbatim}
+%SELECT COUNT(*) as q1 FROM	
+%FROM nyc_data	
+%WHERE date = 'January 22, 2016'
+%\end{verbatim}
+%\begin{verbatim}
+%SELECT COUNT(*) as q2 FROM	
+%FROM nyc_data	
+%WHERE date = 'January 23, 2016'
+%\end{verbatim}
+\newline \newline
+\noindent
+{\bf \textbf{SELECT}}  \textbf{COUNT}(*)  \textbf{AS}  $q_1$  \textbf{FROM} data
+\newline
+\textbf{WHERE} date = 'January 22, 2016'
+\newline \newline
+\noindent
+{\bf \textbf{SELECT}}  \textbf{COUNT}(*)  \textbf{AS}  $q_2$  \textbf{FROM} data
+\newline
+\textbf{WHERE} date = 'January 23, 2016'
+\newline \newline
+%\begin{itemize}
+%	\item Aggregate Query for the number of trips on January 22.
+%	\item Aggregate Query for the number of trips on January 23.
+%\end{itemize}
 The difference in the number of taxi trips between the two dates can be measured by a numeric query $Q = {q_1} / {q_2}$. The number of taxi trips drops drastically, so it means the value of $Q$ is lower than the expected value. Then the {\fact} $F = ({q_1} / {q_2}, low)$.
 
 

@@ -92,6 +92,15 @@ The relative distance metric was chosen because of its nature of showing a steep
 \input{k_fold_figure}
 
 Here are the {\fact}s that we use in the experiment:
+%\newline \newline
+%{\bf \textbf{SELECT}}  \textbf{COUNT}(*)  \textbf{AS}  $q_1$  \textbf{FROM} data	
+%\newline
+%\textbf{WHERE} payment\_type = 1
+%\newline \newline
+%{\bf \textbf{SELECT}}  \textbf{COUNT}(*)  \textbf{AS}  $q_2$  \textbf{FROM} data	
+%\newline
+%\textbf{WHERE} payment\_type = 2
+
 \renewcommand{\lstlistingname}{{Fact}}% Listing -> Algorithm
 \begin{lstlisting}[language=SQL, caption=q1/q2, label=qry:o1]
 Select count(*) as q1 
