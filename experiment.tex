@@ -36,7 +36,7 @@ Another dataset that we use for evaluation is from the Indiana Public Health Eme
 	\caption{Comparison of Influence and Intensity against level of hierarchy with average passenger count as observation}
 	\label{fig:hieint_passenger_count}
 \end{figure}
-Spatial explanation requires to create spatial predicate which partition the whole dataset into different spatial partitions. In our evaluation, we consider three spatial partitioning methods, R-Tree, R* Tree and K-means. 
+Spatial explanation requires to create spatial predicates which partition the whole dataset into different spatial partitions. In our evaluation, we consider three spatial partitioning methods, R-Tree, R* Tree and K-means. 
 Fig. \ref{fig:clustering_comparison} shows the influence of different partitioning methods with a different number of clusters. 
 The stability of the clustering technique is referring to its monotonicity of the explanation as a function of the number of clusters. 
 It shows that R-Tree and R* Tree partitioning methods are more stable than K-Means. 
@@ -123,7 +123,7 @@ Select count(*) as q2
 from data where vendorid=2;
 \end{lstlisting}
 
-Figure \ref{fig:kfolds} demonstrates the relative distance of the three {\fact}s mentioned previously. We can observe that both {\aggravation} and {\intervention} have low relative distance, which means that the best {\explanation} in the training data share few common tuples with the best {\explanation} in the test data. Compared to them, the {\explanation} detected by {\solution} have more overlapped tuples in the training data and the test data. 
+Figure \ref{fig:kfolds} demonstrates the relative distance of the three {\fact}s mentioned previously. We can observe that both {\aggravation} and {\intervention} have low relative distance, which means that the best {\explanation} in the training data shares few common tuples with the best {\explanation} in the test data. Compared to them, the {\explanation} detected by {\solution} has more overlapped tuples in the training data and the test data. 
 
 \subsection{Precision and Recall}
 % \begin{wrapfigure}{L}{0.5\textwidth}
