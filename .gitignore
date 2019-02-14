@@ -10,3 +10,5 @@
 *.png
 *.svg
 *.synctex.gz
+*.DS_Store
+*.pptx
