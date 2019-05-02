@@ -3,7 +3,7 @@ Figure~\ref{fig:framework} gives an overview of the proposed system.
 The system assumes the mobility dataset is stored in a spatial database as a Fact Table with a Star schema \cite{giovinazzo2000object,adamson2010star}. 
 %To understand the Fact Table, it is important to understand the structure of the Star Schema. A traditional relational database system contains a set of tables related by primary and foreign keys. 
 For instance, in our running example (i.e., NYC Taxi Trips dataset), the trips, vendors, and payment type can be represented in separate tables. A trip can have a single payment type while a payment type can be used on multiple trips. This is an example of a one-to-many relationship. 
-In order to represent this data in a relational database, the $trips$ table and the $payment\_type$ table need to have a primary and foreign key. Table~\ref{tbl:fact} can be considered as the central part of the schema since it contains the foreign key to the $payment\_type$ table. Similarly, the central table also contains a foreign key in the $Vendor$ table. Such type of schema where there is a central table consisting of facts while the remaining tables contain the metadata is called a star schema. The central table is called the Fact Table. 
+In order to represent this data in a relational database, the $trips$ table and the $payment\_type$ table need to have a primary and foreign key. Table~\ref{tbl:fact} can be considered as the central part of the schema since it contains the foreign key to the $payment\_type$ table. Similarly, the central table also contains a foreign key in the $Vendor$ table. Such a type of schema where there is a central table consisting of facts while the remaining tables contain the metadata is called a star schema. The central table is called the Fact Table. 
 %In this paper, we focus on the Fact Table.
 
 %The back-end of the system is spatial data managed by a spatial database. 
@@ -102,14 +102,14 @@ The difference in the number of taxi trips between the two dates can be measured
 The proposed system finds a set of plausible {\explanation}s for an observed {\fact}. In the paper, we formally define an {\explanation} as a predicate $\phi$, which is a conditional statement which results in a Boolean value. An {\explanation} indicates a subset of tuples in the data table which satisfy the predicate. For a non-spatial {\explanation}, $\phi$ has the format of $[A$ $op$ $c]$, where $A$ is an attribute in the data table, $op$ can be $=$, $<$, $\leq$, $>$, $\leq$ and $c$ is a numeric value. For example, we can have a non-spatial {\explanation} as follows:
 $$\phi: PaymentType = 1$$
 %This {\explanation} indicates that all the data tuples that satisfy this predicate. 
-The data scientist may use such {\explanation} to explain the {\fact} mentioned previously, which means that the drop on January 22$^{nd}$, 2016 is caused by the trips which are paid using payment method of Type 1.
+The data scientist may use such an {\explanation} to explain the {\fact} mentioned previously, which means that the drop on January 22$^{nd}$, 2016 is caused by the trips which are paid using payment method of Type 1.
 
 %As opposed to existing approaches, the proposed system takes into account the spatial aspect of mobility datasets to find a more accurate and useful explanation.
 
 As opposed to existing approaches, the proposed system takes into account the spatial aspect of mobility datasets to find more accurate and useful {\explanation}s.
 %We take inputs in the form for aggregate queries. An arithmetic expression encapsulates the relationships between these queries. 
 To achieve that, the system employs a data partitioning component that creates a hierarchy of spatial partitions, which represent the candidate spatial {\explanation}s. %Depending on the hierarchy that we have created and our inputs, we perform aggravation and intervention. The results of aggravation and intervention are used in a ranking system based on an explanation index. The explanation index evaluator measures the quality of candidate explanations and outputs the top-k explanations. 
-The {\evaluator} takes the candidate {\explanation}s and the {\fact} detected by the user as input, calculates the {\intensity} and {\influence} for each spatial explanation, and finally return the top-K plausible explanations as output.
+The {\evaluator} takes the candidate {\explanation}s and the {\fact} detected by the user as input, calculates the {\intensity} and {\influence} for each spatial explanation, and finally return the top-K plausible explanations as the output.
 %How much each explanation approach is weighted in the explanation index is under the control of the data analyst. 
 %Finally, the top results are used for visualization. We have created a web-based GUI to display these kinds of explanations.
 

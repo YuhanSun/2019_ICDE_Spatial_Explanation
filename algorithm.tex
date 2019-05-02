@@ -7,7 +7,7 @@ To decide whether an {\explanation} is useful or not, we define two main metrics
 $$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
 %Formal definition of relevance
 where $D$ is the dataset and $D_\phi$ is the subset of the data represented by the {\explanation} $\phi$. $dir$ is 1 if the direction is high and -1 otherwise. 
-The intuitive behind Intensity is as follows: a {\fact} $F$ indicates a value of $Q$ which is higher or lower than normal (direction). A good {\explanation} should have the highest deviation from the whole dataset then it can push the value of $Q$ towards the same direction. 
+The intuitive behind {\intensity} is as follows: a {\fact} $F$ indicates a value of $Q$ which is higher or lower than normal (direction). A good {\explanation} should have the highest deviation from the whole dataset then it can push the value of $Q$ towards the same direction. 
 %The relevance metric borrows a lot from our definition of aggravation. 
 %It might be convenient to think of a web search engine when we are looking at the intensity metric. When we use a search engine, we provide a search term as the query input. The search engine looks at all the pages in its database and returns the results in order of relevance. The top results in the search engine may not have a significant effect on the entire web if they were to be removed. However, the top result in the search engine has the highest relation to the data. For example, the top result for a search engine which uses tf-idf might be a page containing the highest frequency of the search term\cite{robertson2004understanding}.
 
@@ -293,7 +293,7 @@ In our implementation of the system, we utilize the programming paradigm provide
 %The spatial hierarchy that we construct in step 1 of our algorithm is already a DAG since it takes the form of a tree. But for the next few steps, the DAG that we use is based on the DataFrames. Instead of calculating {\aggravation} and {\intervention} for each node DataFrames, we can reuse the values calculated in the leaf DataFrame for higher level DataFrames.
 
 \subsubsection{Step3: Building up the DAG}
-{\aggravation} and {\intervention} are very expensive operations. 
+{\aggravation} and {\intervention} are expensive operations. 
 %In order to create a system for explanations which performs well, we need to reuse calculations. That's the main reason we constructed our DAG in the first place. 
 In order to improve the performance of the system, we reuse the values calculated in the leaf DataFrame to compute the values for higher level DataFrames. 
 %The intervention/aggravation values stored in one level of our DAG can be used one level above. 

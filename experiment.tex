@@ -1,7 +1,7 @@
 \section{EXPERIMENTS}
 \label{sec:evaluation}
 %Why we need evaluation\label{sec:relevance}
-The main contribution of this paper is to introduce a new approach to explanations(Hierarchical Intervention). We evaluate this new approach in a number of different ways. We perform qualitative evaluation and speed/scalability evaluation.
+The main contribution of this paper is to introduce a new approach to explanations (Hierarchical Intervention). We evaluate this new approach in a number of different ways. We perform qualitative evaluation and speed/scalability evaluation.
 
 \begin{figure}[h]
 	\includegraphics[width=0.96\columnwidth]{images/clustering_comparison}
@@ -9,13 +9,13 @@ The main contribution of this paper is to introduce a new approach to explanatio
 	\label{fig:clustering_comparison}
 \end{figure}
 
-In order to compare the different clustering techniques that we use in hierarchical intervention, we did a couple of experiments. Our solution relies on the fact that the higher the influence or intensity is the better the explanation is. We used a number of observations on the NYC TLC data to see how each clustering technique fares against the others.
+The first evaluation is to compare the different clustering techniques that we use in hierarchical intervention. Our solution relies on the fact that the higher the influence or intensity is the better the explanation is. We used a number of observations on the NYC TLC data to see how each clustering technique fares against the others.
 
 \textbf{Experimental Setup}. 
 In our evaluation, we will use both single-machine and multiple-machines environments. 
 In the single-machine environment, we use one machine with an i7 6400 3.5 GHz CPU and 8GB of RAM. 
 In a multiple-machines environment, we take Google Compute Engine as our cluster. 
-The cluster has 4 nodes and all the nodes in our cluster had the same specifications.
+The cluster has 4 nodes and all the nodes in our cluster have the same specifications.
 Each machine has 1 vCPU and 3.5GB RAM.
 We run Apache Spark on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN. 
 
@@ -45,7 +45,7 @@ Furthermore, R* Tree has a higher influence on average compared to other approac
 The candidate spatial {\explanation}s are in different levels of the hierarchy. 
 Fig.~\ref{fig:hieint_passenger_count} shows the {\influence} against the number of hierarchy levels where the observation is the average passenger count. 
 The influence and intensity tend to oscillate when the level of hierarchy changes.
-The changing shape is closer to a sinusoidal curve than an exponential or logarithmic curve. 
+The changing pattern is closer to a sinusoidal curve than an exponential or logarithmic curve. 
 The reason for the oscillation is when merged to a higher level, the {\explanation} can be enhanced or weakened. 
 If the children {\explanation} all have the positive intensity and influence, the parent {\explanation} will be enhanced. 
 Otherwise, the value will decrease. 
@@ -70,9 +70,9 @@ In order to qualitatively assess the solutions, we use K-Folds cross validation\
 %\section{K-Folds Cross Validation}
 K Folds cross-validation is a technique for data evaluation\cite{kohavi1995study,refaeilzadeh2009cross}. The data is divided into $k$ parts. One of the parts is used as a training set and the remaining parts are used as test sets. The purpose of the training set is to model the data. Once we have a model, we can use it to classify and/or predict unseen data. The test set is used to evaluate how well the model was trained.
 
-Since we do not have ground truth for our explanations, we have to make a compromise in terms of estimating how good our solution is. Our assumption here is that in general, a good explanation would stand out on unseen data i.e. given a good explanation on part of the data, it would give similar results on unseen parts of the data. This is the same assumption that was made by \cite{chirigati2016data} in their evaluation of the Data Polygamy framework. 
+Since we do not have the ground truth for our explanations, we have to make a compromise in terms of estimating how good our solution is. Our assumption is that: in general, a good explanation would stand out on unseen data i.e. given a good explanation on part of the data, it would give similar results on unseen parts of the data. This is the same assumption that was made by \cite{chirigati2016data} in their evaluation of the Data Polygamy framework. 
 % Add here
-We use the first 5 months data from  NYC yellow cab dataset in 2016. The data spanned ~50 million trips. 
+We use the first 5 months data from  NYC yellow cab dataset in 2016. The data spans about 50 million trips. 
 %%%%
 We split the data into 5 parts. Each month of data forms one part. 
 %The data was divides by the month of the year. 
