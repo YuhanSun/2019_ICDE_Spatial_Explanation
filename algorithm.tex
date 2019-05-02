@@ -3,7 +3,7 @@
 
 To decide whether an {\explanation} is useful or not, we define two main metrics, namely intensity and influence. 
 
-{\bf Intensity:} We define intensity as a metric that measures the {\fact} value of the explanation (the subset of a dataset). Given a {\fact} $Q$ to be explained, the intensity of an {\explanation} $\phi$ can be as follows:
+{\bf Intensity:} We define intensity as a metric that measures the {\fact} value of the explanation (the subset of a dataset). Given a {\fact} $F=(Q, dir)$ to be explained, the intensity of an {\explanation} $\phi$ can be as follows:
 $$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
 %Formal definition of relevance
 where $D$ is the dataset and $D_\phi$ is the subset of the data represented by the {\explanation} $\phi$. $dir$ is 1 if the direction is high and -1 otherwise. 
@@ -212,7 +212,7 @@ Since our technique uses memorization in a directed acyclic graph, it can be cat
 
 % In order to build the DAG bottom up, we want to use the values of aggravation and intervention in the children nodes to build up. At the beginning of the algorithm, we keep a record of the aggregates for the entire dataset. As mentioned before, we also have aggregates for each node in our dataframe. We can use these two values to calculate aggravation or intervention. For example, if our aggregate query was $SUM$ of an attribute and the node we are looking at consists of two child nodes, then the aggravation value would just be the sum of both the children. The intervention value would be the difference between the sum of the child nodes and the sum of the entire data. Using this approach we can build the explanations up using a left join on the parent and children dataframes.
 
-Once we have built up our DAG one level, we still have tuples which contain incorrect data. These are the tuples with duplicates. Fig.~\ref{fig:steps} shows a representation of this scenario. In order to handle this case, we split our dataframe into two parts: one containing nodes with overlap bit, and one containing tuples without the overlap bit. The Dataframe with the tuples containing the overlap bit has the intervention and aggravation values recalculated. Finally, the split dataframes are merged together to give a final dataframe for the level in the hierarchy without and recounted values. This dataframe can be used for constructing the DAG up further iteratively till we reach the root node.
+Once we have built up our DAG one level, we still have tuples which contain incorrect data. These are the tuples with duplicates. Fig.~\ref{fig:steps} shows a representation of this scenario. In order to handle this case, we split our dataframe into two parts: one containing nodes with overlap bit, and one containing tuples without the overlap bit. The Dataframe with the tuples containing the overlap bit has the intervention and aggravation values recalculated. Finally, the split dataframes are merged together to give a final dataframe for the level in the hierarchy without any recounted values. This dataframe can be used for constructing the DAG up further iteratively till we reach the root node.
 
 \begin{algorithm}
 	\caption{Algorithm for Hierarchical Intervention}\label{alg:hieint}
