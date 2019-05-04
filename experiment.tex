@@ -17,13 +17,13 @@ In the single-machine environment, we use one machine with an i7 6400 3.5 GHz CP
 In a multiple-machines environment, we take Google Compute Engine as our cluster. 
 The cluster has 4 nodes and all the nodes in our cluster have the same specifications.
 Each machine has 1 vCPU and 3.5GB RAM.
-We run Apache Spark on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN. 
+We run Apache Spark on YARN while the Salient Features were generated with the Data Polygamy Framework running on YARN \cite{chirigati2016data}. 
 
 {\bf Dataset}. 
 In our experiment, we use the yellow and green taxi trip records as our dataset. 
 This dataset includes the pick-up and drop-off location of the taxi trips and the properties for each trip, such as fare, payment method, etc,. The dataset is organized in a monthly way that each file in the dataset stores the trips within one month.
 %The dataset used for this experiment was the NYC TLC data for January 2016. This data contains ~10 million trips.
-Another dataset that we use for evaluation is from the Indiana Public Health Emergency Surveillance System. This data contains information about Patients in Indiana and their health issues over time and location. 
+Another dataset that we use for evaluation is from the Indiana Public Health Emergency Surveillance System \cite{maciejewski2009generating}. This data contains information about Patients in Indiana and their health issues over time and location. 
 
 %\textbf{Experimental Setup}. We performed the evaluation on the first 5 months of data from the NYC yellow cab dataset from 2016. The data spanned ~ 50 million trips. The $k$ for our evaluation was $5$. This value was chosen after a series of experiments. We wanted the size of each partition to be large enough to support our generalization assumption. If the solution space for evaluation is small, it leads to inconsistent results. Each month represented a partition for k-folds evaluation. According to our analysis, we found that the approach works very well with low values of alpha. Fig.~\ref{fig:kfolds} shows some of the results of our evaluation for a number of observations. The lower the value of the relative distance, the better the results.
 

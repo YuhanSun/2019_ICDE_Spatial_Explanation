@@ -4,7 +4,7 @@
 To decide whether an {\explanation} is useful or not, we define two main metrics, namely intensity and influence. 
 
 {\bf Intensity:} We define intensity as a metric that measures the {\fact} value of the explanation (the subset of a dataset). Given a {\fact} $F=(Q, dir)$ to be explained, the intensity of an {\explanation} $\phi$ can be as follows:
-$$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
+产$$intensity = dir \cdot (Q (D_\phi) - Q(D)) $$
 %Formal definition of relevance
 where $D$ is the dataset and $D_\phi$ is the subset of the data represented by the {\explanation} $\phi$. $dir$ is 1 if the direction is high and -1 otherwise. 
 The intuitive behind {\intensity} is as follows: a {\fact} $F$ indicates a value of $Q$ which is higher or lower than normal (direction). A good {\explanation} should have the highest deviation from the whole dataset then it can push the value of $Q$ towards the same direction. 
